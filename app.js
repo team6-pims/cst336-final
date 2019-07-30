@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
-app.engine("html", require('ejs'.renderFile));
+
+app.set("view engine", "ejs");
+app.use(express.static("public"));
+
+const request = require("request");
+const mysql = require("mysql");
 
 //------------------------------------
 //    Server Routes
