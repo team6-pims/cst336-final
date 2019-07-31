@@ -11,9 +11,15 @@ const mysql = require("mysql");
 //    Server Routes
 //------------------------------------
 app.get("/", function(req, res){
-    res.render("index")
+    res.render("index");
 });
 
+app.get("/ac_login", function(req, resp){
+    console.log("username " + req.query.ac_username);
+    //console.log("pass " + req.query.ac_pass);
+    
+    resp.render("login_page", {"username": req.query.ac_username } );
+});
 
 
 //------------------------------------

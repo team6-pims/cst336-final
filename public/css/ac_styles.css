@@ -22,3 +22,12 @@ footer {
     transform: translate(0%, 120%);
     text-align: center;
 }
+
+#nameSpan {
+    color:red;
+}
+
+#ac_searchBar{
+    display:inline;
+    background-color: rgba(0,0,0,0.75)
+}
