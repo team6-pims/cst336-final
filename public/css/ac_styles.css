@@ -8,4 +8,17 @@ body {
 
 footer {
     color: white;
+    position: absolute;
+    bottom: 300px;
+}
+
+#ac_mainLogIn {
+    /*position: absolute;*/
+    padding: 0 0 0 0;
+    margin: 0 auto;
+    background-color: rgba(255,255,255,0.6);
+    width: 40%;
+    border: solid black;
+    transform: translate(0%, 120%);
+    text-align: center;
 }
