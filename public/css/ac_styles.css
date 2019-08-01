@@ -7,9 +7,11 @@ body {
 }
 
 footer {
-    color: white;
-    position: absolute;
-    bottom: 300px;
+    color: white;  
+    position:absolute;
+    bottom:0;
+    width:50%;
+    background-color:rgba(0, 0, 0, 0.8);
 }
 
 #ac_mainLogIn {
@@ -24,10 +26,6 @@ footer {
 }
 
 #nameSpan {
-    color:red;
+    color:rgb(0, 162, 255);
 }
 
-#ac_searchBar{
-    display:inline;
-    background-color: rgba(0,0,0,0.75)
-}
