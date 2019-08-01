@@ -24,6 +24,12 @@ app.get("/ac_login", async function(req, resp){
     resp.render("login_page", {"username": req.query.ac_username, "titles": apiData.title, "urls":urls, "imgUrls":imgUrl, "numToDisplay":8 } );
 });
 
+//checkout
+app.get("/mc_checkout", function(req, res) {
+  
+  res.render("checkout")
+});
+
 
 //------------------------------------
 //    Server Listeners
