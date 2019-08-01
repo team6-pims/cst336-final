@@ -1,13 +1,35 @@
+<% include partials/ac_header.ejs %>
 
 </head>
-    <body>
-        <main>
-            
+
+<body>
+    <main>
+        <div id="ac_searchBar_div">
             <form id="ac_searchBar">
-                Welcome <span id="nameSpan"><%=username%></span>  
-                <input type="text" value="Search Items" name="serachItem">
-                <button>Search</button>
+                <h2>Welcome <span id="nameSpan"><%=username%></span>
+                    <input type="text" value="Search Items" name="serachItem">
+                    <button>Search</button></h2>
             </form>
+        </div>
+        <div id="ac_welcomePageMain">
+            <div id="ac_newsFeed">
+                
+                <h2 id="ac_spaceNewsTitle">Space News</h2>
+                <br>
 
-        </main>
+                <% for (var i = 0; i < numToDisplay; i++) { %>
+                    <a class="ac_newsLink" href='<%=urls[i]%>' ><%=titles[i]%></a><br>
+                    <img class="ac_newsImg" src='<%=imgUrls[i]%>' width="75" height="75"><br>                    
+                <% } %>
+                
+            </div>
+            <div id="ac_displayArea">
+                <h3>display stuff goes here</h3>
+            </div>
+        </div>
 
+        <hr>
+
+    </main>
+    
+    <% include partials/ac_footer.ejs %>
