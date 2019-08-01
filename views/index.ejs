@@ -2,20 +2,29 @@
 <style>
     body {
         background-image: url("/img/ac_index.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    footer {
+        position:absolute;
+        bottom: 0;
+        width: 40%;
     }
 </style>
 
 </head>
+
 <body>
     <main>
         <div id="ac_mainLogIn">
             <h2>Welcome</h2>
             <form action="/ac_login">
-            User Name: <input type="text" name="ac_username"> <br>
-            Password: <input type="text" name="ac_pass"> <br>
-            <button> Search </button> <br>
+                User Name: <input type="text" name="ac_username"> <br>
+                Password: <input type="text" name="ac_pass"> <br>
+                <button> Search </button> <br>
             </form>
         </div>
     </main>
 
-<% include partials/ac_footer.ejs %>
+    <% include partials/ac_footer.ejs %>

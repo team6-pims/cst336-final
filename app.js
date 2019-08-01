@@ -7,6 +7,7 @@ app.use(express.static("public"));
 const request = require("request");
 const mysql = require("mysql");
 
+const tools = require("./ac_tools.js");
 //------------------------------------
 //    Server Routes
 //------------------------------------
@@ -14,11 +15,12 @@ app.get("/", function(req, res){
     res.render("index");
 });
 
-app.get("/ac_login", function(req, resp){
-    console.log("username " + req.query.ac_username);
-    //console.log("pass " + req.query.ac_pass);
+app.get("/ac_login", async function(req, resp){
+    var newsURL = "https://spaceflightnewsapi.net/api/v1/articles";
     
-    resp.render("login_page", {"username": req.query.ac_username } );
+    var apiData = await tools.sendAPI_request(newsURL);
+    //console.log(apiData);
+    resp.render("login_page", {"username": req.query.ac_username, "titles": apiData.title, "urls":urls, "imgUrls":imgUrl, "numToDisplay":8 } );
 });
 
 
