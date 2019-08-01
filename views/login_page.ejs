@@ -13,13 +13,18 @@
         </div>
         <div id="ac_welcomePageMain">
             <div id="ac_newsFeed">
+                
+                <h2 id="ac_spaceNewsTitle">Space News</h2>
+                <br>
 
-                <% for (var i = 0; i < 10; i++) { %>
-                    <h3 class="ac_newsTitle"><%=titles[i]%></h3><br>
-                    <img class="ac_newsImg" src='<%=imgUrls[i]%>' width="75" height="75">
-                    <a class="ac_newsLink" href='<%=urls[i]%>' >link</a>
+                <% for (var i = 0; i < numToDisplay; i++) { %>
+                    <a class="ac_newsLink" href='<%=urls[i]%>' ><%=titles[i]%></a><br>
+                    <img class="ac_newsImg" src='<%=imgUrls[i]%>' width="75" height="75"><br>                    
                 <% } %>
-
+                
+            </div>
+            <div id="ac_displayArea">
+                <h3>display stuff goes here</h3>
             </div>
         </div>
 

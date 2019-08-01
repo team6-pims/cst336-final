@@ -20,7 +20,7 @@ app.get("/ac_login", async function(req, resp){
     
     var apiData = await tools.sendAPI_request(newsURL);
     //console.log(apiData);
-    resp.render("login_page", {"username": req.query.ac_username, "titles": apiData.title, "urls":urls, "imgUrls":imgUrl } );
+    resp.render("login_page", {"username": req.query.ac_username, "titles": apiData.title, "urls":urls, "imgUrls":imgUrl, "numToDisplay":8 } );
 });
 
 

@@ -1,16 +1,13 @@
 /*/////////////////////////////////////////////*/
 /* Global Styles */
 /*/////////////////////////////////////////////*/
-body {
-    background-size: cover;
-    background-repeat: no-repeat;
-}
+
 
 footer {
     color: white;  
-    position:absolute;
+    /*position:absolute;
     bottom:0;
-    width:50%;
+    width:50%;*/
     background-color:rgba(0, 0, 0, 0.8);
 }
 
@@ -27,5 +24,27 @@ footer {
 
 #nameSpan {
     color:rgb(0, 162, 255);
+}
+
+#ac_searchBar {
+    display: inline;
+    background-color: red;
+}
+/*/////////////////////////////////////////////*/
+/* Flex Box Settings */
+/*/////////////////////////////////////////////*/
+
+#ac_welcomePageMain {
+    display: flex;
+}
+
+#ac_newsFeed {
+    flex:1;
+    border: solid black 1px;
+}
+
+#ac_displayArea {
+    flex:5;
+    border: solid black 1px;
 }
 
