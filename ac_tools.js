@@ -51,6 +51,16 @@ module.exports = {
                 }
             })
         })
+    },
+
+    createSqlDb_connection: function() {
+        var conn = mysql.createConnection({
+            host: "TBD",
+            user: "TBD",
+            password: "TBD",
+            database: "TBD"
+        });
+        return conn;
     }
 
 };
