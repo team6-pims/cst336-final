@@ -38,6 +38,9 @@ app.get("/ac_login", async function(req, resp){
 
 //checkout
 app.get("/mc_checkout", function(req, res) {
+
+  //connect to the sql database
+  var conn = mc_tools.createConnection();
   
   res.render("checkout")
 });
