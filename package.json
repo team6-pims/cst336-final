@@ -1,26 +1,24 @@
 {
   "name": "cst336-final",
   "version": "1.0.0",
-  "description": "Final project for CST 336",
+  "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bit-flipping-alejo/cst336-final.git"
+    "url": "git+https://github.com/team6-pims/cst336-final.git"
   },
-  "author": "",
+  "author": "Team 6",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bit-flipping-alejo/cst336-final/issues"
+    "url": "https://github.com/team6-pims/cst336-final/issues"
   },
-  "homepage": "https://github.com/bit-flipping-alejo/cst336-final#readme",
+  "homepage": "https://github.com/team6-pims/cst336-final#readme",
   "dependencies": {
-    "bcrypt": "^3.0.6",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
-    "express-session": "^1.16.2",
     "mysql": "^2.17.1",
     "nodemon": "^1.19.1",
     "request": "^2.88.0"
