@@ -2,6 +2,10 @@
 /* Global Styles */
 /*/////////////////////////////////////////////*/
 
+body {
+    font-family: 'Titillium Web', sans-serif;
+    background-color: rgba(0, 0, 0, 0.8);
+}
 
 footer {
     color: white;  
@@ -34,6 +38,7 @@ footer {
 /* Flex Box Settings */
 /*/////////////////////////////////////////////*/
 
+/*Main Layout*/
 #ac_welcomePageMain {
     display: flex;
 }
@@ -41,11 +46,25 @@ footer {
 #ac_newsFeed {
     flex:1;
     border: solid black 1px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.822);
 }
 
 #ac_displayArea {
     flex:5;
     border: solid black 1px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+/*Daily Dashboard Layout Layout*/
+#upperPart {
+    display: flex !important;
+}
+#ac_apod {
+    flex: 2;
+}
+#ac_usage{
+    flex: 2;
 }
 
 /*/////////////////////////////////////////////*/
@@ -53,10 +72,25 @@ footer {
 /*/////////////////////////////////////////////*/
 
 #ac_newsFeed a {
-    font-size: 0.8em;
+    font-size: 0.8em;    
+    
 }
 
+#ac_searchBar_div {
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow: hidden;    
+    border-radius: 20px;
+}
 
+#ac_searchBar_div form {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;    
+}
+
+#ac_newsFeed h2 {
+    text-align: center;
+}
 
 
 

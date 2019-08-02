@@ -8,7 +8,7 @@ const mysql = require("mysql");
 
 module.exports = {
 
-    sendAPI_request: function (apiURL) {
+    sendNewsAPI_request: function (apiURL) {
 
         return new Promise(function (resolve, reject) {
             request(apiURL, function (error, response, body) {
@@ -27,6 +27,25 @@ module.exports = {
 
                     //console.log( {title,urls,imgUrl} );
                     resolve( {title,urls,imgUrl} );
+                } else {
+                    console.log("error", error);
+                }
+            })
+        })
+    },
+
+    sendAPODapi_request: function (apiURL) {
+
+        return new Promise(function (resolve, reject) {
+            request(apiURL, function (error, response, body) {
+                if (!error) {
+                    var parsedData = JSON.parse(body);
+                    
+                    apodURL = parsedData.url;
+                    apodTitle = parsedData.title;
+                    apodCopyright = parsedData.copyright;
+                    
+                    resolve( { apodURL, apodTitle, apodCopyright }  );
                 } else {
                     console.log("error", error);
                 }

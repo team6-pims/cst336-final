@@ -11,11 +11,12 @@
                     <button>Search</button></h2>
             </form>
         </div>
+
         <div id="ac_welcomePageMain">
             <div id="ac_newsFeed">
                 
                 <h2 id="ac_spaceNewsTitle">Space News</h2>
-                <br>
+                <hr>
 
                 <% for (var i = 0; i < numToDisplay; i++) { %>
                     <a class="ac_newsLink" href='<%=urls[i]%>' ><%=titles[i]%></a><br>
@@ -24,7 +25,29 @@
                 
             </div>
             <div id="ac_displayArea">
-                <h3>display stuff goes here</h3>
+                <div id="upperPart">
+                    <div id="ac_apod">
+                        <h2>Your Daily Dashboard</h2>
+                        <h3>Daily NASA APOD Inspiration</h3>
+                        <h4><%=apodTitle%></h4> 
+                        <img class="ac_apodImg" src='<%=apodImgUrl%>' width="200" height="200"><br>
+                    </div>
+                    <hr>
+
+                    <div id="ac_usage">
+                        <h3>Website Usage</h3>
+                        <p>Use the above search box to search for planets or stars! 
+                            You can search based on name OR attribute.
+                            once you add one or more plantets you proceed to the 
+                            checkout and pay. Then the planets/stars are yours!
+                            </p>
+                            <p><i>Were as legit as any other company selling you planets or stars!</i></p>
+                    </div>
+
+                </div>
+
+                <hr>
+
             </div>
         </div>
 
