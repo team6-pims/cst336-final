@@ -33,15 +33,21 @@ app.post("/ac_login", async function(req, resp){
     //var sqlParams = [req.body.ac_username];
     //var sqlResults = ac_tools.sendQuery_getResults(sqlQuery, sqlParams);
     // ---> sqlResults will have isAdmin Bool and the hashed PW
-    //var authenticated = ac_tools.ac_checkPassword( req.body.ac_pass , sqlResults[0].password );
-    //var isAdmin = sqlResults[0].adminPriv;
+    // ---> If sqlResults is undefined then user doesnt exist
+
+    //if (typeof sqlResults != "undefined") {
+    //    var authenticated = ac_tools.ac_checkPassword( req.body.ac_pass , sqlResults[0].password );
+    //    var isAdmin = sqlResults[0].adminPriv;
+    //    req.session.authenticated = authenticated;
+    //    req.session.isAdmin = isAdmin;
+    //} else {
+    //    var authenticated = false;   
+    //    var isAdmin = false;         
+    //}
 
     //Required authentication bools
     var authenticated = true;   //replaced with function above
     var isAdmin = true;         //replaced with function above
-
-    req.session.authenticated = authenticated;
-    req.session.isAdmin = isAdmin;
 
     if (authenticated) {
 
