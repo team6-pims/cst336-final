@@ -6,23 +6,34 @@ app.use(express.static("public"));
 
 const request = require("request");
 const mysql = require("mysql");
+const bcrypt = require("bcrypt");
+const session = require("express-session");
 
 const ac_tools = require("./ac_tools.js");
 const mc_tools = require("./mc_tools.js");
 //------------------------------------
 //    Alejandro Server Routes
 //------------------------------------
+
+app.use( session({
+    secret: "top secret!",
+    resave: true,
+    saveUninitialized: true
+}))
+
+app.use(express.urlencoded({extended: true}));
+
 app.get("/", function(req, res){
     res.render("index");
 });
 
-app.get("/ac_login", async function(req, resp){
+app.post("/ac_login", async function(req, resp){
     var newsURL = "https://spaceflightnewsapi.net/api/v1/articles";
     var NASA_apod_url = "https://api.nasa.gov/planetary/apod?api_key=B49OqOPlbI5JvvBHEwimMRvdtBCWEEsdjgb5eepB";
     var apiData = await ac_tools.sendNewsAPI_request(newsURL);
     var apodData = await ac_tools.sendAPODapi_request(NASA_apod_url);
 
-    resp.render("login_page", {"username": req.query.ac_username, 
+    resp.render("login_page", {"username": req.body.ac_username, 
                                "titles": apiData.title, 
                                "urls":urls, 
                                "imgUrls":apiData.imgUrl, 
