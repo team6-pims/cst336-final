@@ -30,11 +30,11 @@ app.get("/", function(req, res){
 app.post("/ac_login", async function(req, resp){
     //var dbConn = ac_tools.createSqlDb_connection();
     //var sqlQuery = ac_tools.get_isValidUser_SQL();
-    //var sqlParams = [req.body.ac_username ];
+    //var sqlParams = [req.body.ac_username];
     //var sqlResults = ac_tools.sendQuery_getResults(sqlQuery, sqlParams);
-    // ---> sqlResults will have isAdmin Bool and the PW
-    //var authenticated = ac_tools.ac_checkPassword( req.body.ac_pass , sqlResults.pwHash );
-    //var isAdmin = sqlResults.isAdmin;
+    // ---> sqlResults will have isAdmin Bool and the hashed PW
+    //var authenticated = ac_tools.ac_checkPassword( req.body.ac_pass , sqlResults[0].password );
+    //var isAdmin = sqlResults[0].adminPriv;
 
     //Required authentication bools
     var authenticated = true;   //replaced with function above
