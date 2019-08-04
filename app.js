@@ -28,6 +28,17 @@ app.get("/", function(req, res){
 });
 
 app.post("/ac_login", async function(req, resp){
+    var dbConn = ac_tools.createSqlDb_connection();
+
+    //Required authentication bools
+    var authenticated = true;   //replace with function
+    var isAdmin = true;         //replace with function
+
+    req.session.authenticated = authenticated;
+    req.session.isAdmin = isAdmin;
+
+    if (authenticated) {
+
     var newsURL = "https://spaceflightnewsapi.net/api/v1/articles";
     var NASA_apod_url = "https://api.nasa.gov/planetary/apod?api_key=B49OqOPlbI5JvvBHEwimMRvdtBCWEEsdjgb5eepB";
     var apiData = await ac_tools.sendNewsAPI_request(newsURL);
@@ -40,12 +51,42 @@ app.post("/ac_login", async function(req, resp){
                                "numToDisplay":8,
                                "apodImgUrl": apodData.apodURL,
                                "apodTitle": apodData.apodTitle,
-                               "apodCopyright": apodData.apodCopyright });
+                               "apodCopyright": apodData.apodCopyright,
+                               "isAdmin": isAdmin});
+
+    } else {
+        // not authenticated goes here:
+        resp.render("index", {"loginError":true})
+    }
+    
+});
+
+app.get("/logout", function(req, res){
+    console.log("From inside /logout path: User chose to log out");
+    res.session.destroy();
+    res.redirect("/");
 });
 
 //------------------------------------
 //    END Alejandro Server Routes
 //------------------------------------
+
+//------------------------------------
+//    BEGIN Ivan Admin Page Route
+//------------------------------------
+
+app.post("/adminPage", function (req, res){
+    res.send("This is where Ivans page will go");
+});
+
+//------------------------------------
+//    END Ivan Admin Page Route
+//------------------------------------
+
+
+
+
+
 
 //checkout
 app.get("/mc_checkout", function(req, res) {

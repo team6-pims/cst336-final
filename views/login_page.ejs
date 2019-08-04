@@ -10,6 +10,18 @@
                     <input type="text" value="Search Items" name="serachItem">
                     <button>Search</button></h2>
             </form>
+
+            <div id="ac_userBtnDiv">
+                <% if (isAdmin) {%>
+                    <form method="post" action="/adminPage" id="ac_adminForm">
+                        <button id="ac_adminBtn">Go To Admin Page</button>
+                    </form>
+                <%}%>
+                    
+                <form method="GET" action="/logout" id="ac_logout">
+                    <button id="ac_logoutBtn">LogOut</button>
+                </form>
+            </div>
         </div>
 
         <div id="ac_welcomePageMain">

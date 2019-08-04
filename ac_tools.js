@@ -5,6 +5,7 @@
 
 const request = require("request");
 const mysql = require("mysql");
+const bcrypt = require("bcrypt");
 
 module.exports = {
 
@@ -61,6 +62,30 @@ module.exports = {
             database: "TBD"
         });
         return conn;
+    },
+
+    sendQuery_getResults: function(conn, queryTxt){
+        console.log("inside sendQuery_getResults:")
+        conn.connect(function(err){
+            if (err) throw err;
+            console.log("__> Connected")
+            conn.query(queryTxt, function (err, result){
+                if(err) throw err;                
+                console.log("__> Query Sent:" + queryTxt);
+                console.log("__> Results" + result);
+                return ({"rows": result});
+
+            });
+        });
+    },
+
+    checkPassword: function(password, hashedValue){
+        return new Promise ( function (resolve, reject){
+            bcrypt.compare(password, hashedValue, function(err, result){
+                console.log("Inside ac_tools.checkPassword: Result = " + result);
+                resolve(result);
+            })
+        })
     }
 
 };

@@ -32,7 +32,7 @@ footer {
 
 #ac_searchBar {
     display: inline;
-    background-color: red;
+    
 }
 /*/////////////////////////////////////////////*/
 /* Flex Box Settings */
@@ -71,12 +71,17 @@ footer {
 /* Page Specific settings */
 /*/////////////////////////////////////////////*/
 
+#ac_mainLogIn h3 {
+    color: red;
+    font-size: 0.8em;
+}
+
 #ac_newsFeed a {
-    font-size: 0.8em;    
-    
+    font-size: 0.8em;        
 }
 
 #ac_searchBar_div {
+    display: block;
     background-color: rgba(0, 0, 0, 0.8);
     overflow: hidden;    
     border-radius: 20px;
@@ -94,6 +99,24 @@ footer {
 
 
 
+#ac_adminBtn {
+    color:white;
+    background-color: rgba(144, 144, 144, 0.8);
+    border: none;
+    font-size: 0.9em
+}
+
+#ac_logoutBtn {
+    color:white;
+    background-color: rgba(144, 144, 144, 0.8);
+    border: none;
+    font-size: 0.9em;
+    margin: 1px 1px 1px 1px;
+}
+
+#ac_userBtnDiv{
+    display: flex;
+}
 
 
 
