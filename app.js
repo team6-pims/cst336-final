@@ -49,7 +49,11 @@ app.post("/ac_login", async function(req, resp){
 
 //checkout
 app.get("/mc_checkout", function(req, res) {
+
+  //connect to the sql database
+  var conn = mc_tools.createConnection();
   
+  var sql = "SELECT userID FROM checkout";
   res.render("checkout")
 });
 
