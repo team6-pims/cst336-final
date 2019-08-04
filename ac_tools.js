@@ -64,12 +64,22 @@ module.exports = {
         return conn;
     },
 
-    sendQuery_getResults: function(conn, queryTxt){
+    get_isValidUser_SQL: function (inputUserName, inputPass){
+        var theSql = "this is from ivan (?,?)";
+        return theSql;
+    },
+
+    get_pwHash: function (pw){
+        var hash = bcrypt.hash(pw);
+        return hash;
+    },
+
+    sendQuery_getResults: function(conn, queryTxt, queryParams){
         console.log("inside sendQuery_getResults:")
         conn.connect(function(err){
             if (err) throw err;
             console.log("__> Connected")
-            conn.query(queryTxt, function (err, result){
+            conn.query(queryTxt, queryParams, function (err, result){
                 if(err) throw err;                
                 console.log("__> Query Sent:" + queryTxt);
                 console.log("__> Results" + result);

@@ -28,7 +28,12 @@ app.get("/", function(req, res){
 });
 
 app.post("/ac_login", async function(req, resp){
-    var dbConn = ac_tools.createSqlDb_connection();
+    //var dbConn = ac_tools.createSqlDb_connection();
+    //var sqlQuery = ac_tools.get_isValidUser_SQL();
+    //var sqlParams = [req.body.ac_username, get_pwHash(req.body.ac_pass) ];
+    //var sqlResults = ac_tools.sendQuery_getResults(sqlQuery, sqlParams);
+
+    //You need to parse results still
 
     //Required authentication bools
     var authenticated = true;   //replace with function
