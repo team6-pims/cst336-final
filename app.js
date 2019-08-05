@@ -152,21 +152,21 @@ app.post("/adminPage", function (req, res) {
 //    BEGIN Matt Checkout Route
 //------------------------------------
 
-app.get("/mc_checkout", function(req, res) {
+  app.get("/mc_checkout", function(req, res) {
   
   var conn = mc_tools.createConnection();
   var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM Products INNER JOIN DetailedTransactions ON DetailedTransactions.itemID=Products.itemID";
   
-  conn.connect( function(err){
+//   conn.connect( function(err){
     
-    if (err) throw err;
-    conn.query(sql, function(err, result) {
-      if (err) throw err;
-      res.render("checkout", {"productRow" : result});
+//     if (err) throw err;
+//     conn.query(sql, function(err, result) {
+//       if (err) throw err;
+//       res.render("checkout", {"productRow" : result});
       
-    });//query
-  });//connect
-  //res.render("checkout", {})
+//     });//query
+//   });//connect
+  res.render("checkout", {})
 });
 
 //------------------------------------

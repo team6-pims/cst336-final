@@ -11,7 +11,7 @@ module.exports = {
     host: "localhost",
     user: "root",
     password: "",
-    database: "checkout"
+    database: "CST336_Project"
   });
   }
 };
