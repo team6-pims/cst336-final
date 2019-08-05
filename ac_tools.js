@@ -65,7 +65,7 @@ module.exports = {
     },
 
     get_isValidUser_SQL: function (inputUserName, inputPass){
-        var theSql = "this is from ivan (?,?)";
+        var theSql = "SELECT (password, adminPriv) FROM Users WHERE userName=(?)";
         return theSql;
     },
 
@@ -89,7 +89,7 @@ module.exports = {
         });
     },
 
-    checkPassword: function(password, hashedValue){
+    ac_checkPassword: function(password, hashedValue){
         return new Promise ( function (resolve, reject){
             bcrypt.compare(password, hashedValue, function(err, result){
                 console.log("Inside ac_tools.checkPassword: Result = " + result);
