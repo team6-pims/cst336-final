@@ -156,6 +156,10 @@ app.post("/adminPage", function (req, res) {
   
   var conn = mc_tools.createConnection();
   var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM Products INNER JOIN DetailedTransactions ON DetailedTransactions.itemID=Products.itemID";
+//  for when the transID is made.
+//  var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM Products INNER JOIN DetailedTransactions ON DetailedTransactions.itemID=Products.itemID WHERE DetailedTransaction.transID = ?";
+
+
   
 //   conn.connect( function(err){
     
