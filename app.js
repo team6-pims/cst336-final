@@ -42,6 +42,7 @@ app.post("/ac_login", async function(req, resp){
     //    var isAdmin = sqlResults[0].adminPriv;
     //    req.session.authenticated = authenticated;
     //    req.session.isAdmin = isAdmin;
+    //    req.session.username = req.body.ac_username;
     //} else {
     //    var authenticated = false;   
     //    var isAdmin = false;         
