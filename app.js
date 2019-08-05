@@ -147,19 +147,20 @@ app.post("/adminPage", function (req, res) {
 //------------------------------------
 
 
+//------------------------------------
+//    BEGIN Matt Checkout Route
+//------------------------------------
 
-
-
-
-//checkout
 app.get("/mc_checkout", function(req, res) {
-
-  //connect to the sql database
-  var conn = mc_tools.createConnection();
   
-  var sql = "SELECT userID FROM checkout";
+  var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM Products INNER JOIN DetailedTransactions ON DetailedTransactions.itemID=Products.itemID";
+  
   res.render("checkout")
 });
+
+//------------------------------------
+//    END Matt Checkout Route
+//------------------------------------
 
 
 //------------------------------------
