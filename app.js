@@ -11,6 +11,8 @@ const session = require("express-session");
 
 const ac_tools = require("./ac_tools.js");
 const mc_tools = require("./mc_tools.js");
+
+
 //------------------------------------
 //    Alejandro Server Routes
 //------------------------------------
@@ -80,10 +82,59 @@ app.get("/logout", function(req, res){
 //    BEGIN Ivan Admin Page Route
 //------------------------------------
 
-app.post("/adminPage", function (req, res){
-    res.send("This is where Ivans page will go");
+app.get("/adminPage", function (req, res){
+
+
+    var conn = ac_tools.createSqlDb_connection();
+    var sql = "SELECT * FROM Products";
+
+
+    conn.connect( function (err) {
+        if (err) throw err;
+        conn.query(sql,  function (err, results) {
+            if (err) throw err;
+            res.render("adminPage", {"adminName": "ivan", "rows": results});
+        })
+    })
 });
 
+app.post("/adminPage", function (req, res) {
+    let itemID = req.body.itemID;
+    let itemName = req.body.itemName;
+    let price = req.body.price;
+    let description = req.body.description;
+    let tags = req.body.tags;
+    let type = req.body.submit;
+    var conn = ac_tools.createSqlDb_connection();
+
+    if (type === "add") {
+        var sqlAdd = "INSERT INTO Products VALUES (default, ?, ?, ?, ?)";
+        var sqlParamsAdd = [itemName, price, description, tags];
+        conn.query(sqlAdd, sqlParamsAdd, function (err, results) {
+            if (err) throw err;
+        })
+    } else if (type === "update") {
+        var sqlUpdate = "UPDATE Products SET itemName=?, price=?, description1=?, description2=? WHERE itemID=?";
+        var sqlParamsUpdate = [itemName, price, description, tags, itemID];
+        conn.query(sqlUpdate, sqlParamsUpdate, function (err, results) {
+            if (err) throw err;
+        })
+    } else if (type === "delete") {
+        var sqlDelete = "DELETE FROM Products WHERE itemID=?";
+        var sqlParamsDelete = [itemID];
+        conn.query(sqlDelete, sqlParamsDelete, function (err, results) {
+            if (err) throw err;
+        })
+    }
+
+
+
+
+
+
+
+
+});
 //------------------------------------
 //    END Ivan Admin Page Route
 //------------------------------------

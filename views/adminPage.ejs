@@ -1,0 +1,89 @@
+<! Author: Ivan Alejandre>
+
+<% include partials/ia_header.ejs%>
+
+            <ul id="navbar">
+                <li id="database" > Database </li>
+                <li id="reports" > Reports </li>
+            </ul>
+        </div>
+
+        <div id="workArea">
+            <div>
+                <button id="addItem"> Add Item </button>
+                <button id="updateItem"> Update Existing </button>
+                <button id="removeItem"> Delete Item </button>
+            </div>
+            <div id="itemTable">
+                <div id="addForm" class="form-popup">
+                    <form action='POST' class="form-container">
+                        <h1>Add a product</h1>
+                        <h3> Product Name </h3>
+                        <input type='text' name='itemName'>
+                        <h3> Price </h3>
+                        <input type='text' name='price' placeholder="In dollars($)">
+                        <h3> Description </h3>
+                        <textarea name='description' placeholder="500 characters max" cols='100' rows='5'></textarea>
+                        <h3> Tags </h3>
+                        <textarea name='tags' placeholder="list tags separated by a ," cols='100' rows='3'></textarea>
+                        <button type='submit' name='submit' class="btn" id='submit' value="add"> Add </button>
+                        <button type="button" class="btn cancel" id="closeBtnAdd"> Close </button>
+                    </form>
+                </div>
+                <div id="updateModal" class="modal">
+                    <div id="updateForm" class="form-popup">
+                        <form action='POST' class="form-container">
+                            <h1>Update a product</h1>
+                            <h3> Product ID</h3>
+                            <input type="text" name="itemID">
+                            <h3> Product Name </h3>
+                            <input type='text' name='itemName'>
+                            <h3> Price </h3>
+                            <input type='text' name='price' placeholder="In dollars($)">
+                            <h3> Description </h3>
+                            <textarea name='description' placeholder="500 characters max" cols='100' rows='5'></textarea>
+                            <h3> Tags </h3>
+                            <textarea name='tags' placeholder="list tags separated by a ," cols='100' rows='3'></textarea>
+                            <button type='submit' name='submit' class="btn" id='submit' value="update"> Update </button>
+                            <button type="button" class="btn cancel" id="closeBtnUp"> Close </button>
+                        </form>
+                    </div>
+                </div>
+                <div id="removeModal" class="modal">
+                    <div id="deleteForm" class="form-popup">
+                        <form action='POST' class="form-container">
+                            <h1>Delete a product</h1>
+                            <h3> Product ID </h3>
+                            <input type='text' name='itemID'>
+                            <button type='submit' name='submit' class="btn" id='submit' value="delete"> Delete </button>
+                            <button type="button" class="btn cancel" id="closeBtnDel"> Close </button>
+                        </form>
+                    </div>
+                </div>
+                <table>
+                    <tr id="tableHeader">
+                        <td> Product ID </td>
+                        <td> Prodcut Name </td>
+                        <td> Price ($) </td>
+                        <td> Description </td>
+                        <td> Tags </td>
+                    </tr>
+                    <% rows.forEach(function (row) { %>
+                        <tr id="rowData">
+                            <td> <%=row.itemID %> </td>
+                            <td> <%=row.itemName %> </td>
+                            <td> <%=row.price %> </td>
+                            <td> <%=row.description1 %> </td>
+                            <td> <%=row.description2 %> </td>
+                        </tr>
+                    <% }) %>
+                </table>
+            </div>
+            <div id="reportsPage" style="display: none">
+
+            </div>
+        </div>
+
+    </body>
+
+<% include partials/ac_footer.ejs%>
