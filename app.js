@@ -30,27 +30,27 @@ app.get("/", function(req, res){
 });
 
 app.post("/ac_login", async function(req, resp){
-    //var dbConn = ac_tools.createSqlDb_connection();
-    //var sqlQuery = ac_tools.get_isValidUser_SQL();
-    //var sqlParams = [req.body.ac_username];
-    //var sqlResults = ac_tools.sendQuery_getResults(sqlQuery, sqlParams);
-    // ---> sqlResults will have isAdmin Bool and the hashed PW
-    // ---> If sqlResults is undefined then user doesnt exist
+    var dbConn = ac_tools.createSqlDb_connection();
+    var sqlQuery = ac_tools.get_isValidUser_SQL();
+    var sqlParams = [req.body.ac_username];
+    var sqlResults = await ac_tools.sendQuery_getResults(dbConn, sqlQuery, sqlParams);
 
-    //if (typeof sqlResults != "undefined") {
-    //    var authenticated = ac_tools.ac_checkPassword( req.body.ac_pass , sqlResults[0].password );
-    //    var isAdmin = sqlResults[0].adminPriv;
-    //    req.session.authenticated = authenticated;
-    //    req.session.isAdmin = isAdmin;
-    //    req.session.username = req.body.ac_username;
-    //} else {
-    //    var authenticated = false;   
-    //    var isAdmin = false;         
-    //}
+    if (typeof sqlResults != "undefined") {
+        var authenticated = await ac_tools.ac_checkPassword( req.body.ac_pass , sqlResults.password );
+        var isAdmin = sqlResults.adminPriv;
+        console.log("is auth:" + authenticated);
+        console.log("isAdmin = " + isAdmin);
+        req.session.authenticated = authenticated;
+        req.session.isAdmin = isAdmin;
+        req.session.username = req.body.ac_username;
+    } else {
+        var authenticated = false;   
+        var isAdmin = false;         
+    }
 
     //Required authentication bools
-    var authenticated = true;   //replaced with function above
-    var isAdmin = true;         //replaced with function above
+    //var authenticated = true;   //replaced with function above
+    //var isAdmin = true;         //replaced with function above
 
     if (authenticated) {
 

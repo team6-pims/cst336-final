@@ -9,7 +9,7 @@ use CST336_Project;
 CREATE TABLE Users (
     userID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     userName VARCHAR(45),
-    password VARCHAR(45),
+    password VARCHAR(72),
     adminPriv BOOLEAN
 );
 
@@ -34,8 +34,9 @@ CREATE TABLE DetailedTransactions (
 
 -- populate the tables
 -- users
+-- (default, 'admin', password = bcrypt.hash('pass123',1);
 insert into Users values
-(default, 'admin', 'pass123', True),
+(default, 'admin', '$2b$04$Wappq2OLsTdMcZEUmUjrFeXQCbfgQITrb/vMDG2R02oR3joYer0su', True),
 (default, 'buyer', 'stars', False);
 
 -- products
