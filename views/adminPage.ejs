@@ -13,70 +13,74 @@
                 <button id="addItem"> Add Item </button>
                 <button id="updateItem"> Update Existing </button>
                 <button id="removeItem"> Delete Item </button>
+                <span id="actionMessage"></span>
             </div>
             <div id="itemTable">
                 <div id="addForm" class="form-popup">
-                    <form action='POST' class="form-container">
+                    <form id="addFormRes" method="POST" class="form-container">
                         <h1>Add a product</h1>
+                        <h2 class="error" id="addErrorMessage">ERROR: FILL IN ALL FIELDS!</h2>
                         <h3> Product Name </h3>
-                        <input type='text' name='itemName'>
+                        <input type='text' name='itemName' id="addName">
                         <h3> Price </h3>
-                        <input type='text' name='price' placeholder="In dollars($)">
+                        <input type='text' name='price' id="addPrice" placeholder="In dollars($)">
                         <h3> Description </h3>
-                        <textarea name='description' placeholder="500 characters max" cols='100' rows='5'></textarea>
+                        <textarea name='description' id="addDesc" placeholder="500 characters max" cols='100' rows='5'></textarea>
                         <h3> Tags </h3>
-                        <textarea name='tags' placeholder="list tags separated by a ," cols='100' rows='3'></textarea>
-                        <button type='submit' name='submit' class="btn" id='submit' value="add"> Add </button>
+                        <textarea name='tags' id="addTag" placeholder="list tags separated by a ," cols='100' rows='3'></textarea>
+                        <button type='button' class="btn" id='submitAdd' value="add"> Add </button>
                         <button type="button" class="btn cancel" id="closeBtnAdd"> Close </button>
                     </form>
                 </div>
                 <div id="updateModal" class="modal">
                     <div id="updateForm" class="form-popup">
-                        <form action='POST' class="form-container">
+                        <form id="upFormRes" method="POST" class="form-container">
                             <h1>Update a product</h1>
+                            <h2 class="error" id="upErrorMessage">ERROR: FILL IN ALL FIELDS!</h2>
                             <h3> Product ID</h3>
-                            <input type="text" name="itemID">
+                            <input type="text" name="itemID" id="updateID">
                             <h3> Product Name </h3>
-                            <input type='text' name='itemName'>
+                            <input type='text' name='itemName' id="updateName">
                             <h3> Price </h3>
-                            <input type='text' name='price' placeholder="In dollars($)">
+                            <input type='text' name='price' placeholder="In dollars($)" id="updatePrice">
                             <h3> Description </h3>
-                            <textarea name='description' placeholder="500 characters max" cols='100' rows='5'></textarea>
+                            <textarea id="updateDesc" name='description' placeholder="500 characters max" cols='100' rows='5'></textarea>
                             <h3> Tags </h3>
-                            <textarea name='tags' placeholder="list tags separated by a ," cols='100' rows='3'></textarea>
-                            <button type='submit' name='submit' class="btn" id='submit' value="update"> Update </button>
+                            <textarea id="updateTags" name='tags' placeholder="list tags separated by a ," cols='100' rows='3'></textarea>
+                            <button type='button' class="btn" id='submitUpdate' value="update"> Update </button>
                             <button type="button" class="btn cancel" id="closeBtnUp"> Close </button>
                         </form>
                     </div>
                 </div>
                 <div id="removeModal" class="modal">
                     <div id="deleteForm" class="form-popup">
-                        <form action='POST' class="form-container">
+                        <form id="delFormRes" method="POST" class="form-container">
                             <h1>Delete a product</h1>
+                            <h2 class="error" id="delErrorMessage">ERROR: PRODUCT ID IS REQUIRED!</h2>
                             <h3> Product ID </h3>
-                            <input type='text' name='itemID'>
-                            <button type='submit' name='submit' class="btn" id='submit' value="delete"> Delete </button>
+                            <input type='text' name='itemID' id="deleteID">
+                            <button type='button' name='submit' class="btn" id='submitDel' value="delete"> Delete </button>
                             <button type="button" class="btn cancel" id="closeBtnDel"> Close </button>
                         </form>
                     </div>
                 </div>
-                <table>
-                    <tr id="tableHeader">
+                <table class="tableData">
+                    <tr class="tableHeader">
                         <td> Product ID </td>
                         <td> Prodcut Name </td>
                         <td> Price ($) </td>
                         <td> Description </td>
                         <td> Tags </td>
                     </tr>
-                    <% rows.forEach(function (row) { %>
-                        <tr id="rowData">
-                            <td> <%=row.itemID %> </td>
-                            <td> <%=row.itemName %> </td>
-                            <td> <%=row.price %> </td>
-                            <td> <%=row.description1 %> </td>
-                            <td> <%=row.description2 %> </td>
-                        </tr>
-                    <% }) %>
+                        <% rows.forEach(function (row) { %>
+                            <tr class="rowData">
+                                <td> <%=row.itemID %> </td>
+                                <td> <%=row.itemName %> </td>
+                                <td> <%=row.price %> </td>
+                                <td> <%=row.description1 %> </td>
+                                <td> <%=row.description2 %> </td>
+                            </tr>
+                        <% }) %>
                 </table>
             </div>
             <div id="reportsPage" style="display: none">

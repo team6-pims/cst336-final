@@ -90,19 +90,31 @@ app.get("/logout", function(req, res){
 //------------------------------------
 
 app.get("/adminPage", function (req, res){
-
-
     var conn = ac_tools.createSqlDb_connection();
     var sql = "SELECT * FROM Products";
 
-
-    conn.connect( function (err) {
-        if (err) throw err;
-        conn.query(sql,  function (err, results) {
+    if (req.query.action == "requestItem") {
+        var sqlPull = "SELECT * FROM Products WHERE itemID=?";
+        var sqlParams = [req.query.itemID];
+        conn.query(sqlPull, sqlParams, function (err, result) {
             if (err) throw err;
-            res.render("adminPage", {"adminName": "ivan", "rows": results});
+            res.send(result);
         })
-    })
+    } else if (req.query.action == "redrawTable") {
+        var sql = "SELECT * FROM Products";
+        conn.query(sql, function (err, results) {
+            if (err) throw err;
+            res.send(results)
+        })
+    } else {
+        conn.connect(function (err) {
+            if (err) throw err;
+            conn.query(sql, function (err, results) {
+                if (err) throw err;
+                res.render("adminPage", {"adminName": "ivan", "rows": results});
+            })
+        })
+    }
 });
 
 app.post("/adminPage", function (req, res) {
@@ -111,22 +123,22 @@ app.post("/adminPage", function (req, res) {
     let price = req.body.price;
     let description = req.body.description;
     let tags = req.body.tags;
-    let type = req.body.submit;
+    let type = req.body.submitType;
     var conn = ac_tools.createSqlDb_connection();
 
-    if (type === "add") {
+    if (type == "add") {
         var sqlAdd = "INSERT INTO Products VALUES (default, ?, ?, ?, ?)";
         var sqlParamsAdd = [itemName, price, description, tags];
         conn.query(sqlAdd, sqlParamsAdd, function (err, results) {
             if (err) throw err;
-        })
-    } else if (type === "update") {
+        });
+    } else if (type == "update") {
         var sqlUpdate = "UPDATE Products SET itemName=?, price=?, description1=?, description2=? WHERE itemID=?";
         var sqlParamsUpdate = [itemName, price, description, tags, itemID];
         conn.query(sqlUpdate, sqlParamsUpdate, function (err, results) {
             if (err) throw err;
         })
-    } else if (type === "delete") {
+    } else if (type == "delete") {
         var sqlDelete = "DELETE FROM Products WHERE itemID=?";
         var sqlParamsDelete = [itemID];
         conn.query(sqlDelete, sqlParamsDelete, function (err, results) {
@@ -134,13 +146,11 @@ app.post("/adminPage", function (req, res) {
         })
     }
 
-
-
-
-
-
-
-
+    var sql = "SELECT * FROM Products";
+    conn.query(sql, function (err, results) {
+        if (err) throw err;
+        res.render("adminPage", {"adminName": "ivan", "rows": results});
+    })
 });
 //------------------------------------
 //    END Ivan Admin Page Route
