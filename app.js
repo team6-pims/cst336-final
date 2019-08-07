@@ -185,10 +185,16 @@ app.post("/adminPage", function (req, res) {
 //    Server Listeners
 //------------------------------------
 
-// Local Environment (please change port number according to your environment as local or codeanywhere)
-app.listen("8081", "0.0.0.0", function () {
+// Local Environment 
+app.listen("8081", "127.0.0.1", function () {
     console.log("Express server is running...")
 });
+
+// CODE ANYWHERE
+/*app.listen("8081", "0.0.0.0", function () {
+    console.log("Express server is running...")
+});*/
+
 
 // Heroku Environ
 /*app.listen(process.env.PORT, process.env.IP, function () {
