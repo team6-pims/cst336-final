@@ -53,7 +53,6 @@ app.post("/ac_login", async function (req, resp) {
     //req.session.isAdmin = isAdmin;
     //req.session.username = req.body.ac_username;
     
-
     //display info for sanity checks --> Remove when not needed
     console.log("is auth:" + authenticated);
     console.log("isAdmin = " + isAdmin);
@@ -85,7 +84,6 @@ app.post("/ac_login", async function (req, resp) {
 });
 
 app.get("/logout", function (req, res) {
-    console.log("From inside /logout path: User chose to log out");
     req.session.destroy();
     res.redirect("/");
 });
