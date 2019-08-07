@@ -15,19 +15,19 @@ module.exports = {
             request(apiURL, function (error, response, body) {
                 if (!error) {
                     var parsedData = JSON.parse(body);
-                    
+
                     title = [];
                     urls = [];
                     imgUrl = [];
-                    
-                    for (var i = 0; i < parsedData.limit; i++){
-                        title.push( parsedData.docs[i].title );
-                        urls.push( parsedData.docs[i].url );
-                        imgUrl.push( parsedData.docs[i].featured_image );
+
+                    for (var i = 0; i < parsedData.limit; i++) {
+                        title.push(parsedData.docs[i].title);
+                        urls.push(parsedData.docs[i].url);
+                        imgUrl.push(parsedData.docs[i].featured_image);
                     }
 
                     //console.log( {title,urls,imgUrl} );
-                    resolve( {title,urls,imgUrl} );
+                    resolve({ title, urls, imgUrl });
                 } else {
                     console.log("error", error);
                 }
@@ -41,12 +41,12 @@ module.exports = {
             request(apiURL, function (error, response, body) {
                 if (!error) {
                     var parsedData = JSON.parse(body);
-                    
+
                     apodURL = parsedData.url;
                     apodTitle = parsedData.title;
                     apodCopyright = parsedData.copyright;
-                    
-                    resolve( { apodURL, apodTitle, apodCopyright }  );
+
+                    resolve({ apodURL, apodTitle, apodCopyright });
                 } else {
                     console.log("error", error);
                 }
@@ -54,45 +54,48 @@ module.exports = {
         })
     },
 
-    createSqlDb_connection: function() {
+    createSqlDb_connection: function () {
         var conn = mysql.createConnection({
             host: "localhost",
             user: "root",
-            password: "password",
+            password: "toor",
             database: "CST336_Project"
         });
         return conn;
     },
 
-    get_isValidUser_SQL: function (inputUserName, inputPass){
-        var theSql = "SELECT (password, adminPriv) FROM Users WHERE userName=(?)";
+    get_isValidUser_SQL: function (inputUserName, inputPass) {
+        var theSql = "SELECT * FROM CST336_Project.Users WHERE userName=?";
         return theSql;
     },
 
-    get_pwHash: function (pw){
-        var hash = bcrypt.hash(pw);
-        return hash;
-    },
-
-    sendQuery_getResults: function(conn, queryTxt, queryParams){
-        console.log("inside sendQuery_getResults:")
-        conn.connect(function(err){
-            if (err) throw err;
-            console.log("__> Connected")
-            conn.query(queryTxt, queryParams, function (err, result){
-                if(err) throw err;                
-                console.log("__> Query Sent:" + queryTxt);
-                console.log("__> Results" + result);
-                return ({"rows": result});
-
-            });
+    get_pwHash: function (pw) {
+        return new Promise(function (resolve, reject) {
+            var theHash = bcrypt.hash(pw,1);
+            console.log(theHash)
+            resolve(theHash);
         });
     },
 
-    ac_checkPassword: function(password, hashedValue){
-        return new Promise ( function (resolve, reject){
-            bcrypt.compare(password, hashedValue, function(err, result){
-                console.log("Inside ac_tools.checkPassword: Result = " + result);
+    sendQuery_getResults: function (conn, queryTxt, queryParams) {
+        return new Promise(function (resolve, reject) {
+            conn.connect(function (err) {
+                if (err) throw err;
+                conn.query(queryTxt, queryParams, function (err, result) {
+                    if (err) throw err;
+                    if (!result.length) {
+                        resolve(undefined);
+                    } else {                                            
+                        resolve ( result[0] );
+                    }
+                });
+            }); // end connect
+        });
+    },
+
+    ac_checkPassword: function (password, hashedValue) {
+        return new Promise(function (resolve, reject) {
+            bcrypt.compare(password, hashedValue, function (err, result) {
                 resolve(result);
             })
         })
