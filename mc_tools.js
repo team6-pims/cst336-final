@@ -6,7 +6,7 @@ const mysql = require('mysql');
 
 module.exports = {
 
-  createConnection: function(){
+  checkoutConnection: function(){
     var conn = mysql.createConnection({
     host: "localhost",
     user: "root",

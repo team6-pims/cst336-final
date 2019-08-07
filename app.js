@@ -156,20 +156,39 @@ app.post("/adminPage", function (req, res) {
 //    END Ivan Admin Page Route
 //------------------------------------
 
-
-
-
-
+//------------------------------------
+//    START Matt Checkout Route
+//------------------------------------
 
 //checkout
 app.get("/mc_checkout", function(req, res) {
 
   //connect to the sql database
-  var conn = mc_tools.createConnection();
+  //var conn = mc_tools.createConnection();
   
-  var sql = "SELECT userID FROM checkout";
-  res.render("checkout")
+  //var sql = "SELECT userID FROM checkout";
+  //res.render("checkout")
 });
+
+app.get("/api/getCheckout", function(req, res) {
+  var conn = mc_tools.checkoutConnction();
+  var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM `Products` INNER JOIN `DetailedTransactions` ON DetailedTransactions.itemID = Products.itemID WHERE DetailedTransactions.transID = ?"
+  var sqlTransID = [req.query.transID];
+  
+  conn.connect( function(err){
+    
+    if (err) throw err;
+    conn.query(sql, sqlTransID, function(err, results) {
+      if (err) throw err;
+      res.send(results);
+      
+    });//query
+  });//connect
+});//getCheckout
+
+//------------------------------------
+//    END Matt Checkout Route
+//------------------------------------
 
 
 //------------------------------------
