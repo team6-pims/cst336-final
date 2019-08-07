@@ -17,35 +17,33 @@ const mc_tools = require("./mc_tools.js");
 //    Alejandro Server Routes
 //------------------------------------
 
-app.use( session({
+app.use(session({
     secret: "top secret!",
     resave: true,
     saveUninitialized: true
 }))
 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/", function(req, res){
+app.get("/", function (req, res) {
     res.render("index");
 });
 
-app.post("/ac_login", async function(req, resp){
+app.post("/ac_login", async function (req, resp) {
     var dbConn = ac_tools.createSqlDb_connection();
     var sqlQuery = ac_tools.get_isValidUser_SQL();
     var sqlParams = [req.body.ac_username];
     var sqlResults = await ac_tools.sendQuery_getResults(dbConn, sqlQuery, sqlParams);
 
     if (typeof sqlResults != "undefined") {
-        var authenticated = await ac_tools.ac_checkPassword( req.body.ac_pass , sqlResults.password );
+        var authenticated = await ac_tools.ac_checkPassword(req.body.ac_pass, sqlResults.password);
         var isAdmin = sqlResults.adminPriv;
-        console.log("is auth:" + authenticated);
-        console.log("isAdmin = " + isAdmin);
         req.session.authenticated = authenticated;
         req.session.isAdmin = isAdmin;
         req.session.username = req.body.ac_username;
     } else {
-        var authenticated = false;   
-        var isAdmin = false;         
+        var authenticated = false;
+        var isAdmin = false;
     }
 
     //Required authentication fields
@@ -55,31 +53,37 @@ app.post("/ac_login", async function(req, resp){
     //req.session.isAdmin = isAdmin;
     //req.session.username = req.body.ac_username;
 
+    //display info for sanity checks --> Remove when not needed
+    console.log("is auth:" + authenticated);
+    console.log("isAdmin = " + isAdmin);
+
     if (authenticated) {
 
-    var newsURL = "https://spaceflightnewsapi.net/api/v1/articles";
-    var NASA_apod_url = "https://api.nasa.gov/planetary/apod?api_key=B49OqOPlbI5JvvBHEwimMRvdtBCWEEsdjgb5eepB";
-    var apiData = await ac_tools.sendNewsAPI_request(newsURL);
-    var apodData = await ac_tools.sendAPODapi_request(NASA_apod_url);
+        var newsURL = "https://spaceflightnewsapi.net/api/v1/articles";
+        var NASA_apod_url = "https://api.nasa.gov/planetary/apod?api_key=B49OqOPlbI5JvvBHEwimMRvdtBCWEEsdjgb5eepB";
+        var apiData = await ac_tools.sendNewsAPI_request(newsURL);
+        var apodData = await ac_tools.sendAPODapi_request(NASA_apod_url);
 
-    resp.render("login_page", {"username": req.body.ac_username, 
-                               "titles": apiData.title, 
-                               "urls":urls, 
-                               "imgUrls":apiData.imgUrl, 
-                               "numToDisplay":8,
-                               "apodImgUrl": apodData.apodURL,
-                               "apodTitle": apodData.apodTitle,
-                               "apodCopyright": apodData.apodCopyright,
-                               "isAdmin": isAdmin});
+        resp.render("login_page", {
+                    "username": req.body.ac_username,
+                    "titles": apiData.title,
+                    "urls": urls,
+                    "imgUrls": apiData.imgUrl,
+                    "numToDisplay": 8,
+                    "apodImgUrl": apodData.apodURL,
+                    "apodTitle": apodData.apodTitle,
+                    "apodCopyright": apodData.apodCopyright,
+                    "isAdmin": isAdmin
+        });
 
     } else {
         // not authenticated goes here:
-        resp.render("index", {"loginError":true})
+        resp.render("index", { "loginError": true })
     }
-    
+
 });
 
-app.get("/logout", function(req, res){
+app.get("/logout", function (req, res) {
     console.log("From inside /logout path: User chose to log out");
     res.session.destroy();
     res.redirect("/");
@@ -93,18 +97,18 @@ app.get("/logout", function(req, res){
 //    BEGIN Ivan Admin Page Route
 //------------------------------------
 
-app.get("/adminPage", function (req, res){
+app.get("/adminPage", function (req, res) {
 
 
     var conn = ac_tools.createSqlDb_connection();
     var sql = "SELECT * FROM Products";
 
 
-    conn.connect( function (err) {
+    conn.connect(function (err) {
         if (err) throw err;
-        conn.query(sql,  function (err, results) {
+        conn.query(sql, function (err, results) {
             if (err) throw err;
-            res.render("adminPage", {"adminName": "ivan", "rows": results});
+            res.render("adminPage", { "adminName": "ivan", "rows": results });
         })
     })
 });
@@ -155,25 +159,25 @@ app.post("/adminPage", function (req, res) {
 //    BEGIN Matt Checkout Route
 //------------------------------------
 
-  app.get("/mc_checkout", function(req, res) {
-  
-  var conn = mc_tools.createConnection();
-  var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM Products INNER JOIN DetailedTransactions ON DetailedTransactions.itemID=Products.itemID";
-//  for when the transID is made.
-//  var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM Products INNER JOIN DetailedTransactions ON DetailedTransactions.itemID=Products.itemID WHERE DetailedTransaction.transID = ?";
+app.get("/mc_checkout", function (req, res) {
+
+    var conn = mc_tools.createConnection();
+    var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM Products INNER JOIN DetailedTransactions ON DetailedTransactions.itemID=Products.itemID";
+    //  for when the transID is made.
+    //  var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM Products INNER JOIN DetailedTransactions ON DetailedTransactions.itemID=Products.itemID WHERE DetailedTransaction.transID = ?";
 
 
-  
-//   conn.connect( function(err){
-    
-//     if (err) throw err;
-//     conn.query(sql, function(err, result) {
-//       if (err) throw err;
-//       res.render("checkout", {"productRow" : result});
-      
-//     });//query
-//   });//connect
-  res.render("checkout", {})
+
+    //   conn.connect( function(err){
+
+    //     if (err) throw err;
+    //     conn.query(sql, function(err, result) {
+    //       if (err) throw err;
+    //       res.render("checkout", {"productRow" : result});
+
+    //     });//query
+    //   });//connect
+    res.render("checkout", {})
 });
 
 //------------------------------------
