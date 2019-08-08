@@ -41,8 +41,8 @@ app.post("/ac_login", async function (req, resp) {
         // ---> If sqlResults is undefined then user doesnt exist
 
         if (typeof sqlResults != "undefined") {
-            var authenticated = ac_tools.ac_checkPassword(req.body.ac_pass, sqlResults[0].password);
-            var isAdmin = sqlResults[0].adminPriv;
+            var authenticated = await ac_tools.ac_checkPassword(req.body.ac_pass, sqlResults.password);
+            var isAdmin = sqlResults.adminPriv;
             req.session.authenticated = authenticated;
             req.session.isAdmin = isAdmin;
             req.session.username = req.body.ac_username;
@@ -58,7 +58,7 @@ app.post("/ac_login", async function (req, resp) {
     //req.session.authenticated = authenticated;
     //req.session.isAdmin = isAdmin
 
-    if (authenticated) {
+    if (req.session.authenticated) {
 
         var newsURL = "https://spaceflightnewsapi.net/api/v1/articles";
         var NASA_apod_url = "https://api.nasa.gov/planetary/apod?api_key=B49OqOPlbI5JvvBHEwimMRvdtBCWEEsdjgb5eepB";
