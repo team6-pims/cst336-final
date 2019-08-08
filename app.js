@@ -36,7 +36,7 @@ app.post("/ac_login", async function (req, resp) {
         var dbConn = ac_tools.createSqlDb_connection();
         var sqlQuery = ac_tools.get_isValidUser_SQL();
         var sqlParams = [req.body.ac_username];
-        var sqlResults = await ac_tools.sendQuery_getResults(sqlQuery, sqlParams);
+        var sqlResults = await ac_tools.sendQuery_getResults(dbConn, sqlQuery, sqlParams);
         // ---> sqlResults will have isAdmin Bool and the hashed PW
         // ---> If sqlResults is undefined then user doesnt exist
 
