@@ -31,14 +31,14 @@ app.get("/", function (req, res) {
 });
 
 app.post("/ac_login", async function (req, resp) {
+
     console.log("FROM /ac_login: is user authenticated? " + req.session.authenticated);
+    
     if (req.session.authenticated == false) {
         var dbConn = ac_tools.createSqlDb_connection();
         var sqlQuery = ac_tools.get_isValidUser_SQL();
         var sqlParams = [req.body.ac_username];
         var sqlResults = await ac_tools.sendQuery_getResults(dbConn, sqlQuery, sqlParams);
-        // ---> sqlResults will have isAdmin Bool and the hashed PW
-        // ---> If sqlResults is undefined then user doesnt exist
 
         if (typeof sqlResults != "undefined") {
             var authenticated = await ac_tools.ac_checkPassword(req.body.ac_pass, sqlResults.password);
@@ -51,6 +51,7 @@ app.post("/ac_login", async function (req, resp) {
             var isAdmin = false;
         }
     }
+
     //Required authentication bools
     //var authenticated = true;   //replaced with function above
     //var isAdmin = true;         //replaced with function above
