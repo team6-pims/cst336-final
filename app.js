@@ -31,7 +31,7 @@ app.get("/", function (req, res) {
 });
 
 app.post("/ac_login", async function (req, resp) {
-    console.log(req.session.authenticated)
+    console.log("FROM /ac_login: is user authenticated? " + req.session.authenticated);
     if (req.session.authenticated == false) {
         var dbConn = ac_tools.createSqlDb_connection();
         var sqlQuery = ac_tools.get_isValidUser_SQL();
