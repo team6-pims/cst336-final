@@ -50,6 +50,9 @@ app.post("/ac_login", async function(req, resp){
     //Required authentication bools
     var authenticated = true;   //replaced with function above
     var isAdmin = true;         //replaced with function above
+    req.session.username = req.body.ac_username;
+    req.session.authenticated = authenticated;
+    req.session.isAdmin = isAdmin
 
     if (authenticated) {
 
