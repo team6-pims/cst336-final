@@ -1,0 +1,32 @@
+<% include partials/rs_header.ejs %>
+<body>
+    <main>
+        <div class="container">
+            <header class="jumbotron my-4">
+            <h1 class="display-3">The Universe's Best</h1>
+            <p class="lead">Only the finest and most exquisite star formations <br>Plundered and harvested from miners across the galaxy</p>
+            <hr>
+            <div class="container">
+                <input class="form-control form-control-sm ml-2 w-75" type="search" id="querySearch" placeholder="Search...">
+            </div>
+            <br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="itemName" value="itemName" name="searchOptions" checked>
+                <label class="form-check-label" for="itemName">Item Name</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="price" value="price" name="searchOptions" checked>
+                <label class="form-check-label" for="price">Price</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="description" value="description" name="searchOptions" checked>
+                <label class="form-check-label" for="description">Description</label>
+            </div>
+            </header>
+        <div id="products" class="row text-center">
+        </div>
+    </div>
+    </main>
+</body>
+
+<% include partials/rs_footer.ejs %>

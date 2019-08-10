@@ -11,7 +11,7 @@ const session = require("express-session");
 
 const ac_tools = require("./ac_tools.js");
 const mc_tools = require("./mc_tools.js");
-
+const rs_tools = require("./rs_tools.js");
 
 //------------------------------------
 //    Alejandro Server Routes
@@ -39,9 +39,11 @@ app.post("/ac_login", async function (req, resp) {
         var sqlQuery = ac_tools.get_isValidUser_SQL();
         var sqlParams = [req.body.ac_username];
         var sqlResults = await ac_tools.sendQuery_getResults(dbConn, sqlQuery, sqlParams);
+        console.log(sqlResults);
 
         if (typeof sqlResults != "undefined") {
             var authenticated = await ac_tools.ac_checkPassword(req.body.ac_pass, sqlResults.password);
+            console.log(authenticated);
             var isAdmin = sqlResults.adminPriv;
             req.session.authenticated = authenticated;
             req.session.isAdmin = isAdmin;
@@ -200,6 +202,129 @@ app.get("/api/getCheckout", function (req, res) {
 //    END Matt Checkout Route
 //------------------------------------
 
+//------------------------------------
+//    START Randy Product/Search page
+//------------------------------------
+app.get("/search", isAuthenticated, async function(req, res) {
+    var conn = rs_tools.createConnection();
+
+    // Get user id
+    sql = "SELECT userID FROM users WHERE userName = ?"
+    sqlParams = [req.session.username];
+    
+    rs_tools.query(sql, sqlParams).then(function(rows) {
+        req.session.userID = rows[0].userID;
+        req.session.save();
+    });
+
+    res.render("search");
+});
+
+
+/**
+ * querySearch - Query database for items based on input
+ * params: querySearch - query string to look for
+ *       : action - list returns all products, if empty then it falls to filters
+ *       : searchOptions - filter options (itemName, price, description)
+ */
+app.get("/api/querySearch", function (req, res) {
+    var sql = "", sqlParams = [];
+
+    // Check which search parameters were passed and generate
+    // SQL query from there
+    if (req.query.searchOptions.length > 0) {
+        if (req.query.searchOptions.indexOf("itemName") > -1) {
+            sql = "SELECT * FROM products WHERE LOWER(itemName) LIKE ?"
+            sqlParams.push('%'+req.query.querySearch+'%');
+        }
+        if (req.query.searchOptions.indexOf("price") > -1) {
+            if (sql.length > 0)
+                sql += " UNION SELECT * FROM products WHERE price LIKE ?"
+            else
+                sql = "SELECT * FROM products WHERE price LIKE ?"
+            sqlParams.push('%'+req.query.querySearch+'%');
+        }
+        if (req.query.searchOptions.indexOf("description") > -1) {
+            if (sql.length > 0)
+                sql += " UNION SELECT * FROM products WHERE description2 LIKE ?"
+            else
+                sql = "SELECT * FROM products WHERE description2 LIKE ?"
+            sqlParams.push('%'+req.query.querySearch+'%');
+        }
+    }
+
+    if (req.query.action == "list") {
+        sql = "SELECT * FROM products;";
+        sqlParams = [];
+    }
+
+    // Execute query
+    rs_tools.query(sql, sqlParams).then(function(rows) {
+        res.send(rows);
+    });
+});
+
+
+/** 
+ * cartAction
+ * Add/update items in user's cart
+ * params: action - add, update
+ *       : itemID, itemQuantity
+ */
+app.get("/api/cartAction", function (req, res) {
+    var comboSQL, updateSQL, insertSQL;
+    var comboSQLParams, updateSQLParams, insertSQLParams;
+
+    // Query returns item quantity for a user and an item
+    comboSQL = "SELECT itemQuantity FROM usercart WHERE userID = ? AND itemID = ?"
+    comboSQLParams = [req.session.userID, req.query.itemID];
+
+    // Update quantity
+    updateSQL = "UPDATE usercart SET itemQuantity = ? WHERE userID = ? AND itemID = ?"
+    updateSQLParams = [req.query.itemQuantity, req.session.userID, req.query.itemID];
+
+    // Add new item to cart
+    insertSQL = "INSERT INTO usercart VALUES (?, ?, ?)"
+    insertSQLParams = [req.session.userID, req.query.itemID, req.query.itemQuantity];
+
+    // Check if item exists in cart
+    if (req.query.action == "add") {
+        rs_tools.query(comboSQL, comboSQLParams).then(function(rows) {
+            if (rows.length == 0)
+                // Insert item into user's cart
+                rs_tools.query(insertSQL, insertSQLParams).then(function(rows) {
+                    res.send("Data inserted!");
+                });
+            else { 
+                // Item already exists in cart, so find what new quantity should now be
+                let newItemQty = parseInt(rows[0].itemQuantity) + parseInt(req.query.itemQuantity);
+                updateSQLParams = [newItemQty, req.session.userID, req.query.itemID];
+                console.log(updateSQLParams);
+                rs_tools.query(updateSQL, updateSQLParams).then(function(rows) {
+                    res.send("Data updated!")
+                });
+
+            }
+        });
+    } else if (req.query.action == "update") {
+        rs_tools.query(updateSQL, updateSQLParams).then(function(rows){
+            console.log(rows);
+            res.send("Data updated!");
+        });
+    }
+});
+
+// Middleware function to check authentication
+function isAuthenticated(req, res, next) {
+    if (!req.session.authenticated)
+        res.redirect("/");
+    else
+        next();
+}
+
+//------------------------------------
+//    END Randy Product/Search page
+//------------------------------------
 
 //------------------------------------
 //    Server Listeners
