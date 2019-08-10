@@ -32,12 +32,18 @@ CREATE TABLE DetailedTransactions (
     itemID INT REFERENCES Products (itemID)
 );
 
+CREATE TABLE UserCart (
+  userID INT(11) NOT NULL,
+  itemID INT(11) NOT NULL,
+  itemquantity INT(11) NOT NULL
+);
+
 -- populate the tables
 -- users
 -- (default, 'admin', password = bcrypt.hash('pass123',1);
+--(default, 'buyer', password = bcrypt.hash('stars',1), False);
 insert into Users values
 (default, 'admin', '$2b$04$Wappq2OLsTdMcZEUmUjrFeXQCbfgQITrb/vMDG2R02oR3joYer0su', True),
---(default, 'buyer', password = bcrypt.hash('stars',1), False);
 (default, 'buyer', '$2b$04$9eDgKZebf2bMQaz1BVBSSuVmFFYGS4TAArmJ9viDOsTGUhj3BGq92', False);
 
 -- products
