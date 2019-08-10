@@ -12,6 +12,7 @@ const session = require("express-session");
 const ac_tools = require("./ac_tools.js");
 const mc_tools = require("./mc_tools.js");
 const rs_tools = require("./rs_tools.js");
+const ia_tools = require("./ia_tools");
 
 //------------------------------------
 //    Alejandro Server Routes
@@ -48,6 +49,7 @@ app.post("/ac_login", async function (req, resp) {
             req.session.authenticated = authenticated;
             req.session.isAdmin = isAdmin;
             req.session.username = req.body.ac_username;
+            console.log(isAdmin);
         } else {
             var authenticated = false;
             var isAdmin = false;
@@ -101,68 +103,63 @@ app.get("/logout", function (req, res) {
 //    BEGIN Ivan Admin Page Route
 //------------------------------------
 
-app.get("/adminPage", function (req, res) {
-    var conn = ac_tools.createSqlDb_connection();
+app.get("/adminPage", async function (req, res) {
+    var conn = ia_tools.createSqlDb_connection();
     var sql = "SELECT * FROM Products";
+
+    conn.connect(function (err) {
+        if (err) throw err;
+    });
 
     if (req.query.action == "requestItem") {
         var sqlPull = "SELECT * FROM Products WHERE itemID=?";
         var sqlParams = [req.query.itemID];
-        conn.query(sqlPull, sqlParams, function (err, result) {
-            if (err) throw err;
-            res.send(result);
-        })
+        results = await ia_tools.sendQuery(sqlPull, sqlParams, conn);
+        res.send(results);
     } else if (req.query.action == "redrawTable") {
         var sql = "SELECT * FROM Products";
-        conn.query(sql, function (err, results) {
-            if (err) throw err;
-            res.send(results)
-        })
+        results = await ia_tools.sendQuery(sql, [], conn);
+        res.send(results);
     } else {
-        conn.connect(function (err) {
-            if (err) throw err;
-            conn.query(sql, function (err, results) {
-                if (err) throw err;
-                res.render("adminPage", { "adminName": "ivan", "rows": results });
-            })
-        })
+        results = await ia_tools.sendQuery(sql, [], conn);
+        res.render("adminPage", { "adminName": "ivan", "rows": results });
     }
+
+    conn.end();
 });
 
-app.post("/adminPage", function (req, res) {
+app.post("/adminPage", async function (req, res) {
     let itemID = req.body.itemID;
     let itemName = req.body.itemName;
     let price = req.body.price;
     let description = req.body.description;
     let tags = req.body.tags;
     let type = req.body.submitType;
-    var conn = ac_tools.createSqlDb_connection();
+    var conn = ia_tools.createSqlDb_connection();
+
+    conn.connect(function (err) {
+        if (err) throw err;
+    });
 
     if (type == "add") {
         var sqlAdd = "INSERT INTO Products VALUES (default, ?, ?, ?, ?)";
         var sqlParamsAdd = [itemName, price, description, tags];
-        conn.query(sqlAdd, sqlParamsAdd, function (err, results) {
-            if (err) throw err;
-        });
+        await ia_tools.postQuery(sqlAdd, sqlParamsAdd, conn);
     } else if (type == "update") {
         var sqlUpdate = "UPDATE Products SET itemName=?, price=?, description1=?, description2=? WHERE itemID=?";
         var sqlParamsUpdate = [itemName, price, description, tags, itemID];
-        conn.query(sqlUpdate, sqlParamsUpdate, function (err, results) {
-            if (err) throw err;
-        })
+        await ia_tools.postQuery(sqlUpdate, sqlParamsUpdate, conn);
     } else if (type == "delete") {
         var sqlDelete = "DELETE FROM Products WHERE itemID=?";
         var sqlParamsDelete = [itemID];
-        conn.query(sqlDelete, sqlParamsDelete, function (err, results) {
-            if (err) throw err;
-        })
+        await ia_tools.postQuery(sqlDelete, sqlParamsDelete, conn);
     }
 
     var sql = "SELECT * FROM Products";
-    conn.query(sql, function (err, results) {
-        if (err) throw err;
-        res.render("adminPage", { "adminName": "ivan", "rows": results });
-    })
+    var results = await ia_tools.sendQuery(sql, [], conn);
+    res.render("adminPage", { "adminName": "ivan", "rows": results });
+
+    conn.end();
 });
 //------------------------------------
 //    END Ivan Admin Page Route

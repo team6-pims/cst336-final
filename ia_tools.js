@@ -17,5 +17,25 @@ module.exports = {
         return conn;
     },
 
+    sendQuery: function (sql, param, conn) {
+        return new Promise(function (resolve) {
+            conn.query(sql, param, function (err, results) {
+                if (err) throw err;
+                if (!results.length) {
+                    resolve(undefined);
+                } else {
+                    resolve ( results );
+                }
+            });
+        });
+    },
 
+    postQuery: function (sql, param, conn) {
+        return new Promise(function (resolve) {
+            conn.query(sql, param, function (err) {
+                if (err) throw err;
+                resolve();
+            });
+        });
+    }
 };
