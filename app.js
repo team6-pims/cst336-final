@@ -171,6 +171,7 @@ app.post("/adminPage", async function (req, res) {
 
 //Button to preview and load the checkout webpage
 app.get("/checkoutPreview", function (req, res) {
+    let userid = req.query.userID;
     var conn = mc_tools.checkoutConnction();
     var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM `Products` INNER JOIN `DetailedTransactions` ON DetailedTransactions.itemID = Products.itemID WHERE DetailedTransactions.transID = ?"
     var sqlTransID = [req.query.transID];
@@ -180,14 +181,14 @@ app.get("/checkoutPreview", function (req, res) {
         if (err) throw err;
         conn.query(sql, sqlTransID, function (err, results) {
             if (err) throw err;
-            res.render("checkout", {"rows":results});
+            res.render("checkout", {"rows":results}, {"userid":userid});
         });//query
     });//connect
 });//getCheckout
 
 //Button to finalize checkingout
 app.get("/checkoutButton", function (req, res) {
-
+  
   var conn = mc_tools.checkConnection();
   
 });
