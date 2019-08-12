@@ -186,8 +186,9 @@ app.get("/checkoutPreview", function (req, res) {
     });//connect
 });//getCheckout
 
-//Button to finalize checkingout
+//Button to finalize checkout and add transaction
 app.get("/checkoutButton", function (req, res) {
+  let userid = req.query.userID;
   
   var conn = mc_tools.checkConnection();
   
