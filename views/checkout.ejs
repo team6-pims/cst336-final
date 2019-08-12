@@ -13,6 +13,22 @@
     Here is a summary of your order:
   </h1>
   
+  <table>
+    <tr>
+      <th>Product Name</th>
+      <th>Product Price</th>
+    </tr>
+    
+    <% rows.forEach(function(row) { %>
+    <tr>
+      <th><%= row['itemName'] %></th>
+      <th><%= row['itemPrice'] %></th>
+    </tr>
+    
+    
+    <% }) %>
+  </table>
+  
 </body>
 
 <% include partials/mc_footer.ejs %>
