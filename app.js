@@ -169,17 +169,8 @@ app.post("/adminPage", async function (req, res) {
 //    START Matt Checkout Route
 //------------------------------------
 
-//checkout
-app.get("/mc_checkout", function (req, res) {
-
-    //connect to the sql database
-    //var conn = mc_tools.createConnection();
-
-    //var sql = "SELECT userID FROM checkout";
-    //res.render("checkout")
-});
-
-app.get("/api/getCheckout", function (req, res) {
+//Button to preview and load the checkout webpage
+app.get("/checkoutPreview", function (req, res) {
     var conn = mc_tools.checkoutConnction();
     var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM `Products` INNER JOIN `DetailedTransactions` ON DetailedTransactions.itemID = Products.itemID WHERE DetailedTransactions.transID = ?"
     var sqlTransID = [req.query.transID];
@@ -189,11 +180,17 @@ app.get("/api/getCheckout", function (req, res) {
         if (err) throw err;
         conn.query(sql, sqlTransID, function (err, results) {
             if (err) throw err;
-            res.send(results);
-
+            res.render("checkout", {"rows":results});
         });//query
     });//connect
 });//getCheckout
+
+//Button to finalize checkingout
+app.get("/checkoutButton", function (req, res) {
+
+  var conn = mc_tools.checkConnection();
+  
+});
 
 //------------------------------------
 //    END Matt Checkout Route
