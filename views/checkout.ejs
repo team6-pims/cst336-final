@@ -1,6 +1,5 @@
-<!-- Planets have itemID, name, description, price
-     Transactions have transID, itemID, and userID
-     Goes to Transaction Table with transID, userID and timestamp
+<!-- Items from the UserCart table is described in a table with price and quantity.
+     Waits for user to confirm the checkout or return to shopping cart.
 -->
 
 
@@ -16,21 +15,29 @@
   <table>
     <tr>
       <th>Product Name</th>
-      <th>Product Price</th>
+      <th>Product Price per Unit</th>
+      <th>Item Quantity</th>
     </tr>
     
     <% rows.forEach(function(row) { %>
     <tr>
       <th><%= row['itemName'] %></th>
-      <th><%= row['itemPrice'] %></th>
+      <th><%= row['price'] %></th>
+      <th><%= row['itemquantity'] %></th>
     </tr>
     
     
     <% }) %>
   </table>
   
+<!--   
+  <form action="/shoppingCart">
+    <button>
+      Return to Shopping Cart
+    </button>
+  </form> -->
+  
   <form action="/checkoutButton">
-    <input type="hidden" value="<%=userID%>"
     <button>
       Checkout
     </button>

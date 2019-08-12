@@ -170,28 +170,27 @@ app.post("/adminPage", async function (req, res) {
 //------------------------------------
 
 //Button to preview and load the checkout webpage
-app.get("/checkoutPreview", function (req, res) {
+app.get("/checkoutPreview", isAuthenticated, function (req, res) {
     let userid = req.session.userID;
     var conn = mc_tools.checkoutConnction();
-    var sql = "SELECT DISTINCT DetailedTransactions.itemID, Products.itemName, Products.price FROM `Products` INNER JOIN `DetailedTransactions` ON DetailedTransactions.itemID = Products.itemID WHERE DetailedTransactions.transID = ?"
-    var sqlTransID = [req.query.transID];
+    var sql = "SELECT Products.itemName, Products.price, UserCart.itemquantity FROM `UserCart` INNER JOIN `Products` ON UserCart.itemID = Products.itemID WHERE userID =" + userID;
 
     conn.connect(function (err) {
 
         if (err) throw err;
-        conn.query(sql, sqlTransID, function (err, results) {
+        conn.query(sql, function (err, results) {
             if (err) throw err;
-            res.render("checkout", {"rows":results}, {"userid":userid});
+            res.render("checkout", {"rows":results});
         });//query
     });//connect
 });//getCheckout
 
 //Button to finalize checkout and add transaction
-app.get("/checkoutButton", function (req, res) {
+app.get("/checkoutButton", isAuthenticated, function (req, res) {
   let userid = req.session.userID;
-  
   var conn = mc_tools.checkConnection();
   
+  res.render("checkoutFinished");
 });
 
 //------------------------------------
@@ -326,7 +325,7 @@ function isAuthenticated(req, res, next) {
 //    Server Listeners
 //------------------------------------
 
-// heroku uses 0.0.0.0
+// codeanywhere uses 0.0.0.0
 /*app.listen("8081", "0.0.0.0", function () {
     console.log("Express server is running...")
 });
