@@ -202,7 +202,7 @@ app.get("/checkoutButton", isAuthenticated, function (req, res) {
   let userid = req.session.userID;
   var transid = "";
   var conn = mc_tools.checkConnection();
-  var submitTrans = "INSERT INTO `GeneralTransactions` (userID) VALUES (userid)";
+  var submitTrans = "INSERT INTO `GeneralTransactions` (userID, trans_ts) VALUES (" + userid + ", CURRENT_TIMESTAMP)";
   var submitOrder = "INSERT INTO `DetailedTransactions` (transID, itemID, itemquantity) SELECT '"+ transid +"', itemID, itemquantity FROM UserCart WHERE userID =" + userid +"; DELETE FROM UserCart WHERE userID ="+ userid;
   
   //create transactionID
