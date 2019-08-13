@@ -3,34 +3,37 @@
 <% include partials/ia_header.ejs%>
 
             <ul id="navbar">
-                <li id="database" > Database </li>
-                <li id="reports" > Reports </li>
+                <li id="database" class=""> Database </li>
+                <li id="reports" class=""> Reports </li>
+                <li id="about" class="navBarActive"> Help </li>
             </ul>
         </div>
 
         <div id="workArea">
-            <div>
-                <button id="addItem"> Add Item </button>
-                <button id="updateItem"> Update Existing </button>
-                <button id="removeItem"> Delete Item </button>
-                <span id="actionMessage"></span>
-            </div>
             <div id="itemTable">
-                <div id="addForm" class="form-popup">
-                    <form id="addFormRes" method="POST" class="form-container">
-                        <h1>Add a product</h1>
-                        <h2 class="error" id="addErrorMessage">ERROR: FILL IN ALL FIELDS!</h2>
-                        <h3> Product Name </h3>
-                        <input type='text' name='itemName' id="addName">
-                        <h3> Price </h3>
-                        <input type='text' name='price' id="addPrice" placeholder="In dollars($)">
-                        <h3> Description </h3>
-                        <textarea name='description' id="addDesc" placeholder="500 characters max" cols='100' rows='5'></textarea>
-                        <h3> Tags </h3>
-                        <textarea name='tags' id="addTag" placeholder="list tags separated by a ," cols='100' rows='3'></textarea>
-                        <button type='button' class="btn" id='submitAdd' value="add"> Add </button>
-                        <button type="button" class="btn cancel" id="closeBtnAdd"> Close </button>
-                    </form>
+                <div class="buttonGroup">
+                    <button class="tableBtn" id="addItem"> Add Item </button>
+                    <button class="tableBtn" id="updateItem"> Update Existing </button>
+                    <button class="tableBtn" id="removeItem"> Delete Item </button>
+                    <span id="actionMessage"></span>
+                </div>
+                <div id="addModal" class="modal">
+                    <div id="addForm" class="form-popup">
+                        <form id="addFormRes" method="POST" class="form-container">
+                            <h1>Add a product</h1>
+                            <h2 class="error" id="addErrorMessage">ERROR: FILL IN ALL FIELDS!</h2>
+                            <h3> Product Name </h3>
+                            <input type='text' name='itemName' id="addName">
+                            <h3> Price </h3>
+                            <input type='text' name='price' id="addPrice" placeholder="In dollars($)">
+                            <h3> Description </h3>
+                            <textarea name='description' id="addDesc" placeholder="500 characters max" cols='100' rows='5'></textarea>
+                            <h3> Tags </h3>
+                            <textarea name='tags' id="addTag" placeholder="list tags separated by a ," cols='100' rows='3'></textarea>
+                            <button type='button' class="btn" id='submitAdd' value="add"> Add </button>
+                            <button type="button" class="btn cancel" id="closeBtnAdd"> Close </button>
+                        </form>
+                    </div>
                 </div>
                 <div id="updateModal" class="modal">
                     <div id="updateForm" class="form-popup">
@@ -66,24 +69,38 @@
                 </div>
                 <table class="tableData">
                     <tr class="tableHeader">
-                        <td> Product ID </td>
-                        <td> Prodcut Name </td>
-                        <td> Price ($) </td>
-                        <td> Description </td>
-                        <td> Tags </td>
+                        <th> Product ID </th>
+                        <th> Prodcut Name </th>
+                        <th> Price ($) </th>
+                        <th class="descriptionCol"> Description </th>
+                        <th> Tags </th>
                     </tr>
                         <% rows.forEach(function (row) { %>
                             <tr class="rowData">
                                 <td> <%=row.itemID %> </td>
                                 <td> <%=row.itemName %> </td>
                                 <td> <%=row.price %> </td>
-                                <td> <%=row.description1 %> </td>
+                                <td class="descriptionCol"> <%=row.description1 %> </td>
                                 <td> <%=row.description2 %> </td>
                             </tr>
                         <% }) %>
                 </table>
             </div>
             <div id="reportsPage" style="display: none">
+                <select id="query">
+                    <option value=""> Select a query </option>
+                    <option value="popular"> Popularity </option>
+                    <option value="price"> Price </option>
+                </select>
+                <select id="querySpecifier">
+
+                </select>
+                <button id="reportsSubmit"> Search </button>
+                <table id="reportsTable" class="tableData">
+
+                </table>
+            </div>
+            <div id="aboutDescription">
 
             </div>
         </div>

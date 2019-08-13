@@ -117,3 +117,88 @@ footer {
 .error {
     display: none;
 }
+
+/* Table formatting */
+tr:hover {
+   background-color: whitesmoke;
+}
+td {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.descriptionCol {
+    width: 60%;
+}
+
+/* Button styles*/
+.tableBtn {
+    padding: 20px;
+    margin-right: 25px;
+    font-size: large;
+    margin-bottom: 40px;
+}
+
+#addItem {
+    background-color: green;
+    border-color: green;
+    margin-left: 15px;
+}
+
+#updateItem {
+    background-color: darkslateblue;
+    border-color: darkslateblue;
+}
+
+#removeItem {
+    background-color: red;
+    border-color: red;
+}
+
+/* Nav bar styles */
+ul {
+    list-style-type: none;
+    margin: 15px;
+    padding: 0;
+    background-color: dimgrey;
+    height: auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+li {
+    display: inline-block;
+    color: silver;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-top: 2px solid black;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#about {
+    float: right;
+    width: 120px;
+    text-align: center;
+}
+
+.navBarActive {
+    background-color: lightblue;
+    color: black;
+}
+
+/* Work area div elements initially hidden */
+#itemTable {
+    display: none;
+}
+
+#reportsPage {
+    display: none;
+}
+
+/* Reports styling */
+#querySpecifier {
+    display: none;
+}

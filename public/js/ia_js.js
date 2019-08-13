@@ -1,4 +1,33 @@
 $(document).ready(function () {
+    /* Navbar listeners */
+    $("#database").on("click", function () {
+        $("#reports").attr("class", "");
+        $("#about").attr("class", "");
+        $("#database").attr("class", "navBarActive");
+        $("#itemTable").show();
+        $("#reportsPage").hide();
+        $("#aboutDescription").hide();
+    });
+
+    $("#reports").on("click", function () {
+        $("#reports").attr("class", "navBarActive");
+        $("#about").attr("class", "");
+        $("#database").attr("class", "");
+        $("#itemTable").hide();
+        $("#reportsPage").show();
+        $("#aboutDescription").hide();
+    });
+
+    $("#about").on("click", function () {
+        $("#reports").attr("class", "");
+        $("#about").attr("class", "navBarActive");
+        $("#database").attr("class", "");
+        $("#itemTable").hide();
+        $("#reportsPage").hide();
+        $("#aboutDescription").show();
+    });
+    
+    /* Database manipulation listeners */
     $("#addItem").on("click", function () {
         $("#addForm").css("display", "block");
     });
@@ -144,6 +173,32 @@ $(document).ready(function () {
             });
         }
     });
+
+    /* Reports listeners */
+    $("#query").on("change", function () {
+        $("#querySpecifier").show();
+        if ($("#query").val() == 'popular') {
+            $("#querySpecifier").html("<option value='most'> Most </option>" +
+                                    "<option value='least'> Least </option>")
+        } else if ($("#query").val() == 'price') {
+            $("#querySpecifier").html("<option value='high'> Most Expensive </option>" +
+                                    "<option value='low'> Least Expensive</option>")
+        } else {
+            $("#querySpecifier").hide();
+        }
+    });
+
+    $("#reportsSubmit").on("click", function () {
+        var query, specifier;
+
+        if ($("#query").val() == '') {
+            //error
+        } else {
+            query = $("#query").val();
+            specifier = $("#querySpecifier").val();
+            retrieveReport(query, specifier)
+        }
+    })
 });
 
 function redrawTable() {
@@ -153,9 +208,9 @@ function redrawTable() {
         data: {"action": "redrawTable"},
         success: function (rows) {
             $(".tableData").empty();
-            $(".tableData").html("<tr class=\"tableHeader\">\n" + "<td> Product ID </td>\n" +
-                "<td> Prodcut Name </td>\n" + "<td> Price ($) </td>\n" + "<td> Description </td>\n" +
-                "<td> Tags </td>\n");
+            $(".tableData").html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
+                "<th> Product Name </th>\n" + "<th> Price ($) </th>\n" + "<th> Description </th>\n" +
+                "<th> Tags </th>\n");
             rows.forEach(function (row) {
                 $(".tableData").append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
                     "</td>\n<td>" + row.price + "</td>\n<td>" + row.description1 + "</td>\n<td>" + row.description2
@@ -163,7 +218,27 @@ function redrawTable() {
             });
         }
     })
+}
 
-
-
+function retrieveReport(query, specifier) {
+    $.ajax({
+        method: "get",
+        url: "/adminPage",
+        data: {
+            "action": "report",
+            "query": query,
+            "specifier": specifier
+        },
+        success: function (rows) {
+            $("#reportsTable").empty();
+            $("#reportsTable").html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
+                "<th> Prodcut Name </th>\n" + "<th> Price ($) </th>\n" + "<th> Description </th>\n" +
+                "<th> Tags </th>\n");
+            rows.forEach(function (row) {
+                $("#reportsTable").append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
+                    "</td>\n<td>" + row.price + "</td>\n<td>" + row.description1 + "</td>\n<td>" + row.description2
+                    + "</td></tr>");
+            });
+        }
+    })
 }

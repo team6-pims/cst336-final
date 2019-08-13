@@ -120,7 +120,17 @@ app.get("/adminPage", async function (req, res) {
         var sql = "SELECT * FROM Products";
         results = await ia_tools.sendQuery(sql, [], conn);
         res.send(results);
-    } else {
+    } /*else if (req.query.action == "report") {
+        let queryType = req.query.query;
+        let specifier = req.query.specifier;
+        var sql, param; // need?
+
+        if (queryType == 'popular') {
+            if (specifier == 'most') {
+                sql = "SELECT "
+            }
+        }
+    } */else {
         results = await ia_tools.sendQuery(sql, [], conn);
         res.render("adminPage", { "adminName": "ivan", "rows": results });
     }
@@ -137,6 +147,7 @@ app.post("/adminPage", async function (req, res) {
     let type = req.body.submitType;
     var conn = ia_tools.createSqlDb_connection();
 
+    // open up the connection
     conn.connect(function (err) {
         if (err) throw err;
     });
@@ -159,6 +170,7 @@ app.post("/adminPage", async function (req, res) {
     var results = await ia_tools.sendQuery(sql, [], conn);
     res.render("adminPage", { "adminName": "ivan", "rows": results });
 
+    // close connection - not a pool connection
     conn.end();
 });
 //------------------------------------
