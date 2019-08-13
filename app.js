@@ -182,47 +182,42 @@ app.post("/adminPage", async function (req, res) {
 //------------------------------------
 
 //Button to preview and load the checkout webpage
-app.get("/checkoutPreview", isAuthenticated, function (req, res) {
-    let userid = req.session.userID;
-    var conn = mc_tools.checkoutConnection();
-    var sql = "SELECT Products.itemName, Products.price, UserCart.itemquantity FROM `UserCart` INNER JOIN `Products` ON UserCart.itemID = Products.itemID WHERE userID =" + userid;
+app.get("/checkoutPreview", isAuthenticated, async function (req, res) {
+  let userid = req.session.userID;
+  var conn = ia_tools.createSqlDb_connection();
+  var sql = "SELECT Products.itemName, Products.price, UserCart.itemquantity FROM `UserCart` INNER JOIN `Products` ON UserCart.itemID = Products.itemID WHERE userID =" + userid;
 
-    conn.connect(function (err) {
+  conn.connect(function (err) {
+      if (err) throw err;
+  });
+  
+  var results = await ia_tools.sendQuery(sql, [], conn);
+    
+  res.render("checkout", {"rows": results});
+  conn.end();
 
-        if (err) throw err;
-        conn.query(sql, function(err, results) {
-            if (err) throw err;
-            res.render("checkout", {"rows":results});
-        });//query
-    });//connect
 });//getCheckout
 
 //Button to finalize checkout and add transaction
-app.get("/checkoutButton", isAuthenticated, function (req, res) {
+app.get("/checkoutButton", isAuthenticated, async function (req, res) {
   let userid = req.session.userID;
-  var transid = "";
+  let transid = "";
   var conn = mc_tools.checkConnection();
   var submitTrans = "INSERT INTO `GeneralTransactions` (userID, trans_ts) VALUES (" + userid + ", CURRENT_TIMESTAMP)";
   var submitOrder = "INSERT INTO `DetailedTransactions` (transID, itemID, itemquantity) SELECT '"+ transid +"', itemID, itemquantity FROM UserCart WHERE userID =" + userid +"; DELETE FROM UserCart WHERE userID ="+ userid;
   
-  //create transactionID
   conn.connect(function (err) {
-        if (err) throw err;
-        conn.query(submitTrans, function(err, results) {
-            if (err) throw err;
-            transid = results.transID;
-        });//query
-    });//connect 
+      if (err) throw err;
+  });
   
-  conn.connect(function (err) {
-        if (err) throw err;
-        conn.query(submitOrder, function(err, results) {
-            if (err) throw err;
-            
-        });//query
-    });//connect  
+  //create new transaction and get new transID
+  var results = await ia_tools.sendQuery(submitTrans, [], conn);
+  transid = results.transID;
   
-  res.render("checkoutFinished");
+  //submit order by moving data from UserCart to DetailedTransactions table
+  await ia_tools.postQuery(submitOrder, [], conn); 
+  
+  res.render("checkoutFinished", {"transid":transid});
 });
 
 //------------------------------------
