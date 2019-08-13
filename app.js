@@ -173,7 +173,7 @@ app.post("/adminPage", async function (req, res) {
 app.get("/checkoutPreview", isAuthenticated, function (req, res) {
     let userid = req.session.userID;
     var conn = mc_tools.checkoutConnection();
-    var sql = "SELECT Products.itemName, Products.price, UserCart.itemquantity FROM `UserCart` INNER JOIN `Products` ON UserCart.itemID = Products.itemID WHERE userID =" + userID;
+    var sql = "SELECT Products.itemName, Products.price, UserCart.itemquantity FROM `UserCart` INNER JOIN `Products` ON UserCart.itemID = Products.itemID WHERE userID =" + userid;
 
     conn.connect(function (err) {
 
@@ -191,7 +191,7 @@ app.get("/checkoutButton", isAuthenticated, function (req, res) {
   var transid = "";
   var conn = mc_tools.checkConnection();
   var submitTrans = "INSERT INTO `GeneralTransactions` (userID) VALUES (userid)";
-  var submitOrder = "";
+  var submitOrder = "INSERT INTO `DetailedTransactions` (transID, itemID, itemquantity) SELECT '"+ transid +"', itemID, itemquantity FROM UserCart WHERE userID =" + userid +"; DELETE FROM UserCart WHERE userID ="+ userid;
   
   //create transactionID
   conn.connect(function (err) {
@@ -209,12 +209,6 @@ app.get("/checkoutButton", isAuthenticated, function (req, res) {
             
         });//query
     });//connect  
-
-
-  
-  
-  //Move information from UserCart to Transactions table and clear user's cart
-  // To be finished
   
   res.render("checkoutFinished");
 });
