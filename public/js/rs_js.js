@@ -1,5 +1,7 @@
 $(document).ready(function() {
-    searchProducts("", "list", "");
+    if(!location.pathname.contains("search")) {
+        searchProducts("", "list", "");
+    }
 });
 
 // Search function

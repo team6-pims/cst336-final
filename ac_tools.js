@@ -58,7 +58,7 @@ module.exports = {
         var conn = mysql.createConnection({
             host: "localhost",
             user: "root",
-            password: "toor",
+            password: "password",
             database: "CST336_Project"
         });
         return conn;

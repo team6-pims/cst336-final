@@ -222,10 +222,9 @@ app.get("/checkoutButton", isAuthenticated, async function (req, res) {
 //------------------------------------
 
 //------------------------------------
-//    START Randy Product/Search page
+//    START Randy Product Search, Cart page
 //------------------------------------
-app.get("/search", isAuthenticated, async function(req, res) {
-    var conn = rs_tools.createConnection();
+app.get("/search", isAuthenticated, function(req, res) {
 
     // Get user id
     sql = "SELECT userID FROM users WHERE userName = ?"
@@ -237,6 +236,23 @@ app.get("/search", isAuthenticated, async function(req, res) {
     });
 
     res.render("search");
+});
+
+app.get("/cart", function(req, res) {
+    var sql = "", sqlParams = [];
+    req.session.userID = 1;
+    // Get user's cart
+    sql = "SELECT itemID, itemName, price, itemQuantity, description1 FROM usercart NATURAL JOIN products WHERE userID = ?;";
+    sqlParams = [req.session.userID];
+    console.log("SQL: " + sql);
+    console.log("sqlParams: " + sqlParams);
+    console.log("userID: " + req.session.userID);
+    // Execute query
+    rs_tools.query(sql, sqlParams).then(function(rows) {
+        console.log("rows: " + rows[1].itemName);
+        res.render("cart", {rows: rows});
+    });
+    
 });
 
 
@@ -276,6 +292,16 @@ app.get("/api/querySearch", function (req, res) {
         sql = "SELECT * FROM products;";
         sqlParams = [];
     }
+
+    // Execute query
+    rs_tools.query(sql, sqlParams).then(function(rows) {
+        res.send(rows);
+    });
+});
+
+app.get("/api/getCart", function(req, res) {
+    sql = "SELECT itemName, price, itemQuantity, description1 FROM usercart NATURAL JOIN products WHERE userID = ?;";
+    sqlParams = [req.query.userID];
 
     // Execute query
     rs_tools.query(sql, sqlParams).then(function(rows) {
@@ -327,7 +353,6 @@ app.get("/api/cartAction", function (req, res) {
         });
     } else if (req.query.action == "update") {
         rs_tools.query(updateSQL, updateSQLParams).then(function(rows){
-            console.log(rows);
             res.send("Data updated!");
         });
     }
@@ -342,7 +367,7 @@ function isAuthenticated(req, res, next) {
 }
 
 //------------------------------------
-//    END Randy Product/Search page
+//    END Randy Product Search, Cart page
 //------------------------------------
 
 //------------------------------------

@@ -62,5 +62,11 @@ INSERT INTO Products VALUES
 -- extraneous items
 (default, 'Asteroid belt', 800000000, 'Glam your system with an asteroid belt to be placed at your desire. A great accessory item for any system as asteroids are mineral rich and highly usable for any space faring society', 'asteroid, rock, belt'),
 (default, 'Asteroid', 50000, 'Any system has rogue asteroids and your system is not complete with a couple million of these little guys orbiting about.', 'asteroid, rogue'),
-(default, 'Comet', 80000, 'The key difference between an asteroid and a comet is the presence of water-ice and other frozen compounds that sublimate when it gets close to a heat source. A beautiful addition to any system.', 'comet')
+(default, 'Comet', 80000, 'The key difference between an asteroid and a comet is the presence of water-ice and other frozen compounds that sublimate when it gets close to a heat source. A beautiful addition to any system.', 'comet');
 -- last two tables left blank for now
+INSERT INTO usercart VALUES(1,5,12)
+, (1,1,1)
+, (1,2,15)
+, (1,3,14)
+, (1,4,2);
+
