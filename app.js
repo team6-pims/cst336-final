@@ -238,7 +238,7 @@ app.get("/checkoutButton", isAuthenticated, async function (req, res) {
   let userid = req.session.userID;
   let transid = "";
   let totalCost = "";
-  var conn = mc_tools.checkConnection();
+  var conn = ia_tools.createSqlDb_connection();
   var calcTotal = "SELECT SUM(Products.Price * UserCart.itemquantity) AS totalCost FROM Products JOIN UserCart ON Products.itemID = UserCart.itemID WHERE userID =" + userid;
   var submitTrans = "INSERT INTO `GeneralTransactions` (userID, trans_ts, price_total) VALUES (" + userid + ", CURRENT_TIMESTAMP, " + totalCost +")";
   var submitOrder = "INSERT INTO `DetailedTransactions` (transID, itemID, itemquantity) SELECT '"+ transid +"', itemID, itemquantity FROM UserCart WHERE userID =" + userid +"; DELETE FROM UserCart WHERE userID ="+ userid;
@@ -419,15 +419,15 @@ function isAuthenticated(req, res, next) {
 //------------------------------------
 
 // codeanywhere uses 0.0.0.0
-// app.listen("8081", "0.0.0.0", function () {
-//     console.log("Express server is running...")
-// });
+app.listen("8081", "0.0.0.0", function () {
+    console.log("Express server is running...")
+});
 
 
 // local machine uses 127.0.0.1
-app.listen("8081", "127.0.0.1", function () {
-    console.log("Express server is running...")
-});
+// app.listen("8081", "127.0.0.1", function () {
+//     console.log("Express server is running...")
+// });
 
 // Heroku Environ
 /*app.listen(process.env.PORT, process.env.IP, function () {
