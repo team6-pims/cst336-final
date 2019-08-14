@@ -214,16 +214,21 @@ app.post("/adminPage", async function (req, res) {
 //Button to preview and load the checkout webpage
 app.get("/checkoutPreview", isAuthenticated, async function (req, res) {
   let userid = req.session.userID;
+  let totalCOST = "";
   var conn = ia_tools.createSqlDb_connection();
   var sql = "SELECT Products.itemName, Products.price, UserCart.itemquantity FROM `UserCart` INNER JOIN `Products` ON UserCart.itemID = Products.itemID WHERE userID =" + userid;
+  var calcTotal = "SELECT SUM(Products.Price * UserCart.itemquantity) AS totalCost FROM Products JOIN UserCart ON Products.itemID = UserCart.itemID WHERE userID =" + userid;
 
   conn.connect(function (err) {
       if (err) throw err;
   });
+
+  var result = await ia_tools.sendQuery(calcTotal,[], conn);
+  totalCost = result.totalCost;
   
   var results = await ia_tools.sendQuery(sql, [], conn);
     
-  res.render("checkout", {"rows": results});
+  res.render("checkout", {"rows": results, "totalCost":totalCost});
   conn.end();
 
 });//getCheckout
@@ -253,7 +258,7 @@ app.get("/checkoutButton", isAuthenticated, async function (req, res) {
   //submit order by moving data from UserCart to DetailedTransactions table
   await ia_tools.postQuery(submitOrder, [], conn); 
   
-  res.render("checkoutFinished", {"transid":transid, "totalCost":totalCost});
+  res.render("checkoutFinished", {"transid":transid});
 });
 
 //------------------------------------
