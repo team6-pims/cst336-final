@@ -25,13 +25,13 @@ CREATE TABLE GeneralTransactions (
     transID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     userID INT REFERENCES Users (userID),
     trans_ts DATETIME NOT NULL,
-    price_total INT
+    price_total BIGINT(25) NOT NULL
 );
 
 CREATE TABLE DetailedTransactions (
     transID INT REFERENCES GeneralTransactions (transID),
     itemID INT REFERENCES Products (itemID),
-    itemID INT REFERENCES Products (itemID)
+    itemquantity INT REFERENCES UserCart (itemquantity)
 );
 
 CREATE TABLE UserCart
@@ -72,12 +72,12 @@ INSERT INTO Products VALUES
 (default, 'Comet', 80000, 'The key difference between an asteroid and a comet is the presence of water-ice and other frozen compounds that sublimate when it gets close to a heat source. A beautiful addition to any system.', 'comet');
 -- last two tables left blank for now
 
-INSERT INTO usercart VALUES
-(1,5,12),
-(1,1,1),
-(1,2,15),
-(1,3,14),
-(1,4,2);
+INSERT INTO UserCart VALUES
+(2,5,12),
+(2,1,1),
+(2,2,15),
+(2,3,14),
+(2,4,2);
 
 INSERT INTO DetailedTransactions VALUES
 (1,10,2),
@@ -87,5 +87,11 @@ INSERT INTO DetailedTransactions VALUES
 (2,13,5),
 (2,15,2),
 (3,16,8),
-(4,16,10)
+(4,16,10);
+
+INSERT INTO GeneralTransactions VALUES
+(1,2,CURRENT_TIMESTAMP, 24000000000),
+(2,2,CURRENT_TIMESTAMP, 35500000000),
+(3,2,CURRENT_TIMESTAMP, 6400000000),
+(4,2,CURRENT_TIMESTAMP, 8000000000)
 
