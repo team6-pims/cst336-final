@@ -18,11 +18,11 @@ module.exports = {
     },
 
     sendQuery: function (sql, param, conn) {
-        return new Promise(function (resolve) {
+        return new Promise(function (resolve, reject) {
             conn.query(sql, param, function (err, results) {
-                if (err) throw err;
-                if (!results.length) {
-                    resolve(undefined);
+                //if (err) throw err;
+                if (!results || err) {
+                    reject( err );
                 } else {
                     resolve ( results );
                 }

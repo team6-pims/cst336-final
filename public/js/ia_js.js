@@ -79,6 +79,7 @@ $(document).ready(function () {
         var price = $("#addPrice").val();
         var description = $("#addDesc").val();
         var tag = $("#addTag").val();
+        var actionMessage = $("#actionMessage");
 
         if (name == "" || price == ""|| description == "" || tag == "") {
             $("#addErrorMessage").show();
@@ -95,10 +96,10 @@ $(document).ready(function () {
                     "submitType": $("#submitAdd").val()
                 },
                 success: function (status) {
-                    $("#actionMessage").show();
-                    $("#actionMessage").text("Addition Sucessful!");
-                    $("#actionMessage").css("color", "green");
-                    $("#actionMessage").fadeOut(5000); // five second fade out
+                    actionMessage.show();
+                    actionMessage.text("Addition Sucessful!");
+                    actionMessage.css("color", "green");
+                    actionMessage.fadeOut(5000); // five second fade out
                     $("#addForm").css("display", "none");
                     $("#addFormRes").trigger("reset");
                     $("#addErrorMessage").hide();
@@ -115,8 +116,9 @@ $(document).ready(function () {
         var price = $("#updatePrice").val();
         var description = $("#updateDesc").val();
         var tags = $("#updateTags").val();
+        var actionMessage = $("#actionMessage");
 
-        if (itemID = "" || name == "" || price == ""|| description == "" || tag == "") {
+        if (itemID == "" || name == "" || price == ""|| description == "" || tag == "") {
             $("#upErrorMessage").show();
             $("#upErrorMessage").css({"textAlign": "center", "color": "red"})
         } else {
@@ -132,10 +134,10 @@ $(document).ready(function () {
                     "submitType": "update"
                 },
                 success: function (status) {
-                    $("#actionMessage").show();
-                    $("#actionMessage").text("Update Sucessful!");
-                    $("#actionMessage").css("color", "green");
-                    $("#actionMessage").fadeOut(5000); // five second fade out
+                    actionMessage.show();
+                    actionMessage.text("Update Sucessful!");
+                    actionMessage.css("color", "green");
+                    actionMessage.fadeOut(5000); // five second fade out
                     $("#updateForm").css("display", "none");
                     $("#upFormRes").trigger("reset");
                     $("#upErrorMessage").hide();
@@ -148,10 +150,12 @@ $(document).ready(function () {
     // delete submission
     $("#submitDel").on("click", function () {
         var itemID = $("#deleteID").val();
+        var deleteError = $("#delErrorMessage");
+        var actionMessage = $("#actionMessage");
 
-        if (itemID = "" || name == "" || price == ""|| description == "" || tag == "") {
-            $("#delErrorMessage").show();
-            $("#delErrorMessage").css({"textAlign": "center", "color": "red"})
+        if (itemID == "") {
+            deleteError.show();
+            deleteError.css({"textAlign": "center", "color": "red"})
         } else {
             $.ajax({
                 method: "post",
@@ -161,10 +165,10 @@ $(document).ready(function () {
                     "submitType": "delete"
                 },
                 success: function (status) {
-                    $("#actionMessage").show();
-                    $("#actionMessage").text("Deletion Sucessful!");
-                    $("#actionMessage").css("color", "green");
-                    $("#actionMessage").fadeOut(5000); // five second fade out
+                    actionMessage.show();
+                    actionMessage.text("Deletion Sucessful!");
+                    actionMessage.css("color", "green");
+                    actionMessage.fadeOut(5000); // five second fade out
                     $("#deleteForm").css("display", "none");
                     $("#delFormRes").trigger("reset");
                     $("#delErrorMessage").hide();
@@ -177,12 +181,16 @@ $(document).ready(function () {
     /* Reports listeners */
     $("#query").on("change", function () {
         $("#querySpecifier").show();
-        if ($("#query").val() == 'popular') {
+        if ($(this).val() == 'popular') {
             $("#querySpecifier").html("<option value='most'> Most </option>" +
-                                    "<option value='least'> Least </option>")
-        } else if ($("#query").val() == 'price') {
+                                    "<option value='least'> Least  </option>");
+        } else if ($(this).val() == 'price') {
             $("#querySpecifier").html("<option value='high'> Most Expensive </option>" +
-                                    "<option value='low'> Least Expensive</option>")
+                                    "<option value='low'> Least Expensive </option>");
+        } else if ($(this).val() == 'transaction') {
+            $("#querySpecifier").html("<option value='most'> Largest total </option>" +
+                "<option value='average'> Individual user average </option>" +
+                "<option value='least'> Smallest total </option>");
         } else {
             $("#querySpecifier").hide();
         }
@@ -230,15 +238,33 @@ function retrieveReport(query, specifier) {
             "specifier": specifier
         },
         success: function (rows) {
-            $("#reportsTable").empty();
-            $("#reportsTable").html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
-                "<th> Prodcut Name </th>\n" + "<th> Price ($) </th>\n" + "<th> Description </th>\n" +
-                "<th> Tags </th>\n");
-            rows.forEach(function (row) {
-                $("#reportsTable").append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
-                    "</td>\n<td>" + row.price + "</td>\n<td>" + row.description1 + "</td>\n<td>" + row.description2
-                    + "</td></tr>");
-            });
+            let reportsTable = $("#reportsTable");
+            reportsTable.empty();
+
+            if (query == 'popular') {
+                $("#reportsTable").html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
+                    "<th> Product Name </th>\n" + "<th> Total Units Sold </th>");
+                rows.forEach(function (row) {
+                    $("#reportsTable").append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
+                        "</td>\n<td>" + row.total_units + "</td>");
+                });
+            } else if (query == 'price') {
+                $("#reportsTable").html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
+                    "<th> Product Name </th>\n" + "<th> Price ($) </th>");
+                rows.forEach(function (row) {
+                    $("#reportsTable").append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
+                        "</td>\n<td>" + row.price + "</td>");
+                });
+            } else if (query == 'transaction' && rows.length > 0) {
+                $("#reportsTable").html("<tr class=\"tableHeader\">\n" + "<th> Transaction ID </th>\n" +
+                    "<th> Transaction Total ($) </th>\n<th> User Name </th>\n<th> UserID </th>");
+                rows.forEach(function (row) {
+                    $("#reportsTable").append("<tr class=\"rowData\"><td>" + row.transID + "</td>\n<td>" + row.price_total +
+                        "</td>\n<td>" + row.userName + "</td>\n<td>" + row.userID + "</td>");
+                });
+            } else {
+                $("#reportsTable").html("<h2>Empty return from database</h2>")
+            }
         }
     })
 }

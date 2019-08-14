@@ -103,6 +103,7 @@ app.get("/logout", function (req, res) {
 app.get("/adminPage", async function (req, res) {
     var conn = ia_tools.createSqlDb_connection();
     var sql = "SELECT * FROM Products";
+    var results;
 
     conn.connect(function (err) {
         if (err) throw err;
@@ -117,17 +118,49 @@ app.get("/adminPage", async function (req, res) {
         var sql = "SELECT * FROM Products";
         results = await ia_tools.sendQuery(sql, [], conn);
         res.send(results);
-    } /*else if (req.query.action == "report") {
+    } else if (req.query.action == "report") {
         let queryType = req.query.query;
         let specifier = req.query.specifier;
-        var sql, param; // need?
+        let sql, param; // need?
 
         if (queryType == 'popular') {
+            sql = "SELECT Products.itemID, itemName, SUM(quantity) as 'total_units' FROM Products INNER JOIN DetailedTransactions ON Products.itemID = DetailedTransactions.itemID GROUP BY itemID ORDER BY SUM(quantity)";
             if (specifier == 'most') {
-                sql = "SELECT "
+                sql += " DESC";
+
+            } else if (specifier == 'least') {
+                sql += " ASC";
+            }
+
+        } else if (queryType == 'price') {
+            sql = "SELECT itemID, itemName, price FROM Products WHERE price = (select";
+            if (specifier == 'high') {
+                sql += " max(price) from Products)";
+            } else if (specifier == 'low') {
+                sql += " min(price) from Products)";
+            }
+        } else if (queryType == 'transaction') {
+            sql = "SELECT transID, price_total, userName, Users.userID FROM Users INNER JOIN GeneralTransactions ON Users.userID = GeneralTransactions.userID ORDER BY price_total";
+            if (specifier == 'most') {
+                sql += " DESC LIMIT 10";
+            } else if (specifier == 'average') {
+                sql = "SELECT itemID, itemName, price FROM Product WHERE price = (select max(price) from Products)";
+            } else if (specifier == 'least') {
+                sql += " DESC LIMIT 10";
             }
         }
-    } */else {
+        var error;
+        results = await ia_tools.sendQuery(sql, [], conn).catch(err => {error = err});
+
+        if (error) {
+            console.log(error)
+        } else {
+            res.send(results);
+        }
+
+
+
+    } else {
         results = await ia_tools.sendQuery(sql, [], conn);
         res.render("adminPage", { "adminName": "ivan", "rows": results });
     }

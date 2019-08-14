@@ -72,7 +72,7 @@ module.exports = {
     get_pwHash: function (pw) {
         return new Promise(function (resolve, reject) {
             var theHash = bcrypt.hash(pw,1);
-            console.log(theHash)
+            console.log(theHash);
             resolve(theHash);
         });
     },
