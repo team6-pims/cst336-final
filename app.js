@@ -214,7 +214,7 @@ app.post("/adminPage", async function (req, res) {
 //Button to preview and load the checkout webpage
 app.get("/checkoutPreview", isAuthenticated, async function (req, res) {
   let userid = req.session.userID;
-  let totalCOST = "";
+  let totalCost = "";
   var conn = ia_tools.createSqlDb_connection();
   var sql = "SELECT Products.itemName, Products.price, UserCart.itemquantity FROM `UserCart` INNER JOIN `Products` ON UserCart.itemID = Products.itemID WHERE userID =" + userid;
   var calcTotal = "SELECT SUM(Products.Price * UserCart.itemquantity) AS totalCost FROM Products JOIN UserCart ON Products.itemID = UserCart.itemID WHERE userID =" + userid;
@@ -224,7 +224,7 @@ app.get("/checkoutPreview", isAuthenticated, async function (req, res) {
   });
 
   var result = await ia_tools.sendQuery(calcTotal,[], conn);
-  totalCost = result.totalCost;
+  totalCost = result[0].totalCost;
   
   var results = await ia_tools.sendQuery(sql, [], conn);
     
@@ -249,17 +249,17 @@ app.get("/checkoutButton", isAuthenticated, async function (req, res) {
   
   //get total from the UserCart
   var result = await ia_tools.sendQuery(calcTotal,[], conn);
-  totalCost = result.totalCost;
+  totalCost = result[0].totalCost;
   
   //create new transaction and get new transID
   var results = await ia_tools.sendQuery(submitTrans, [], conn);
-  transid = results.transID;
+  transid = results[0].transID;
   
   //submit order by moving data from UserCart to DetailedTransactions table
   await ia_tools.postQuery(submitOrder, [], conn); 
   
   res.render("checkoutFinished", {"transid":transid});
-});
+});//finalize checkout
 
 //------------------------------------
 //    END Matt Checkout Route
@@ -419,15 +419,15 @@ function isAuthenticated(req, res, next) {
 //------------------------------------
 
 // codeanywhere uses 0.0.0.0
-// app.listen("8081", "0.0.0.0", function () {
-//     console.log("Express server is running...")
-// });
+app.listen("8081", "0.0.0.0", function () {
+    console.log("Express server is running...")
+});
 
 
 // local machine uses 127.0.0.1
-app.listen("8081", "127.0.0.1", function () {
-    console.log("Express server is running...")
-});
+// app.listen("8081", "127.0.0.1", function () {
+//     console.log("Express server is running...")
+// });
 
 // Heroku Environ
 /*app.listen(process.env.PORT, process.env.IP, function () {
