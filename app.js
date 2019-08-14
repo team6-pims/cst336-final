@@ -33,23 +33,20 @@ app.get("/", function (req, res) {
 
 app.post("/ac_login", async function (req, resp) {
 
-    console.log("FROM /ac_login: is user authenticated? " + req.session.authenticated);
     
     if (req.session.authenticated == false) {
         var dbConn = ac_tools.createSqlDb_connection();
         var sqlQuery = ac_tools.get_isValidUser_SQL();
         var sqlParams = [req.body.ac_username];
         var sqlResults = await ac_tools.sendQuery_getResults(dbConn, sqlQuery, sqlParams);
-        console.log(sqlResults);
 
         if (typeof sqlResults != "undefined") {
             var authenticated = await ac_tools.ac_checkPassword(req.body.ac_pass, sqlResults.password);
-            console.log(authenticated);
-            var isAdmin = sqlResults.adminPriv;
+            var isAdmin = ac_tools.process_isAdmin( sqlResults.adminPriv );
             req.session.authenticated = authenticated;
             req.session.isAdmin = isAdmin;
             req.session.username = req.body.ac_username;
-            console.log(isAdmin);
+            console.log("Is the user the admin = " + isAdmin);
         } else {
             var authenticated = false;
             var isAdmin = false;

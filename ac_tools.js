@@ -99,6 +99,14 @@ module.exports = {
                 resolve(result);
             })
         })
+    },
+
+    process_isAdmin: function (isAdmin) {
+        if (isAdmin == 1) {
+            return true;
+        } 
+        return false;
+        
     }
 
 };
