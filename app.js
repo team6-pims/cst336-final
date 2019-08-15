@@ -261,8 +261,10 @@ app.get("/checkoutButton", isAuthenticated, async function (req, res) {
   let transid, totalCost;
   var conn = ia_tools.createSqlDb_connection();
   var calcTotal = "SELECT SUM(products.Price * usercart.itemquantity) AS totalCost FROM products JOIN usercart ON products.itemID = usercart.itemID WHERE userID = ?";
-  var submitTrans = "INSERT INTO `generaltransactions` (userID, trans_ts, price_total) VALUES (?, CURRENT_TIMESTAMP, ?)";
-  var submitOrder = "INSERT INTO `detailedtransactions` (transID, itemID, itemquantity) SELECT ?, itemID, itemquantity FROM usercart WHERE userID = ?; DELETE FROM usercart WHERE userID = ?";
+  var submitTrans = "INSERT INTO `generaltransactions` (transID, userID, trans_ts, price_total) VALUES (default, ?, CURRENT_TIMESTAMP, ?)";
+  var getLatestTransID = "SELECT * FROM generaltransactions ORDER BY transID DESC LIMIT 1";
+  var submitOrder = "INSERT INTO `detailedtransactions` (transID, itemID, itemquantity) SELECT ?, itemID, itemquantity FROM usercart WHERE userID = ?";
+  var clearUsercart = "DELETE FROM usercart WHERE userID = ?";
   
   conn.connect(function (err) {
       if (err) throw err;
@@ -272,12 +274,14 @@ app.get("/checkoutButton", isAuthenticated, async function (req, res) {
   var result = await ia_tools.sendQuery(calcTotal,[userid], conn);
   totalCost = result[0].totalCost;
   
-  //create new transaction and get new transID
-  var results = await ia_tools.sendQuery(submitTrans, [userid, totalCost], conn);
+  //create new transaction and get new transII
+  await ia_tools.postQuery(submitTrans, [userid, totalCost], conn);
+  var results = await ia_tools.sendQuery(getLatestTransID, [], conn);
   transid = results[0].transID;
   
   //submit order by moving data from UserCart to DetailedTransactions table
   await ia_tools.postQuery(submitOrder, [transid, userid, userid], conn);
+  await ia_tools.postQuery(clearUsercart, [userid], conn);
   
   res.render("checkoutFinished", {"transid":transid});
 });//finalize checkout
