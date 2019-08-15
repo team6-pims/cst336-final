@@ -59,7 +59,7 @@ $(document).ready(function () {
     $("#updateID").on("change", function () {
         $.ajax({
              method: "get",
-                url: "/api/adminPage",
+                url: "/adminPage",
                data: {"itemID": $("#updateID").val(),
                       "action": "requestItem"},
             success: function (results, status) {
@@ -213,7 +213,7 @@ function redrawTable() {
     let tableData = $(".tableData");
     $.ajax({
         method: "get",
-        url: "/api/adminPage",
+        url: "/adminPage",
         data: {"action": "redrawTable"},
         success: function (rows) {
             tableData.empty();
@@ -232,7 +232,7 @@ function redrawTable() {
 function retrieveReport(query, specifier) {
     $.ajax({
         method: "get",
-        url: "/api/adminPage",
+        url: "/adminPage",
         data: {
             "action": "report",
             "query": query,
