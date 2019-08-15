@@ -47,6 +47,17 @@ app.post("/ac_login", async function (req, resp) {
             req.session.isAdmin = isAdmin;
             req.session.username = req.body.ac_username;
             console.log("Is the user the admin = " + isAdmin);
+
+            /* Randy - Get user id */
+            sql = "SELECT userID FROM users WHERE userName = ?"
+            sqlParams = [req.session.username];
+            
+            rs_tools.query(sql, sqlParams).then(function(rows) {
+                req.session.userID = rows[0].userID;
+                console.log("UserID: " + req.session.userID);
+                req.session.save();
+            });
+            /* End Randy */
         } else {
             var authenticated = false;
             var isAdmin = false;
@@ -269,16 +280,6 @@ app.get("/checkoutButton", isAuthenticated, async function (req, res) {
 //    START Randy Product Search, Cart page
 //------------------------------------
 app.get("/search", isAuthenticated, function(req, res) {
-
-    // Get user id
-    sql = "SELECT userID FROM users WHERE userName = ?"
-    sqlParams = [req.session.username];
-    
-    rs_tools.query(sql, sqlParams).then(function(rows) {
-        req.session.userID = rows[0].userID;
-        req.session.save();
-    });
-
     res.render("search");
 });
 
