@@ -24,21 +24,22 @@
                             </div>
                             <div class="col-12 col-sm-12 text-sm-center col-md-4 text-md-right row">
                                 <div class="col-4 col-sm-4 col-md-7 text-md-right" style="padding-top: 5px">
-                                    <h6 id="item-price" style="margin-top: 6px;"><strong>$<%= row.price %></strong></h6>
+                                    <h6 id="item-price" style="margin-top: 6px;"><strong>$<%= row.price.toLocaleString("en") %></strong></h6>
                                 </div>
-                                <div class="col-2 col-sm-4 col-md-4">
+                                <div class="col-1 col-sm-4 col-md-4">
                                     <div class="quantity">
-                                        <input type="number" id="itemQuantity" step="1" max="99" min="1" value="<%= row.itemQuantity %>" title="Qty" class="qty"
-                                                size="4">
+                                        <input type="number" step="1" max="99" min="1" value="<%= row.itemQuantity %>" itemID="<%= row.itemID %>" class="itemQuantity"
+                                                size="2">
                                     </div>
+                                    <br>
+                                <div class="col-12 col-sm-1">
+                                    <button type="button" class="btn btn-outline-danger btn-xs deleteItem" itemID="<%= row.itemID %>">
+                                        <i class="fa fa-trash" aria-hidden="true" itemID="<%= row.itemID %>"></i>
+                                    </button>
+                                </div>    
                                 </div>
                                 <div class="col-12">
-                                    <button type="button" class="btn btn-outline-secondary">
-                                        Update Item
-                                    </button>&nbsp;&nbsp;
-                                    <button type="button" class="btn btn-outline-danger btn-xs">
-                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -48,9 +49,9 @@
                      </div>
                      <div class="card-footer">
                          <div class="float-right" style="margin: 10px">
-                             <a href="" class="btn btn-success float-right">Checkout</a>
-                             <div id="total-price" class="float-right" style="margin-right: 20px; margin-top: 5px;">
-                                 Subtotal: <b>$50.00</b>
+                             <a href="/checkout" class="btn btn-success float-right">Checkout</a>
+                             <div class="float-right" style="margin-right: 20px; margin-top: 5px;">
+                                 Subtotal: <b id="subtotal"></b>
                              </div>
                          </div>
                      </div>
