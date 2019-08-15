@@ -1,17 +1,14 @@
 /*/////////////////////////////////////////////*/
 /* Global Styles */
 /*/////////////////////////////////////////////*/
-
 body {
     font-family: 'Titillium Web', sans-serif;
     background-color: rgba(0, 0, 0, 0.8);
+    color: black;
 }
 
 footer {
     color: white;
-    /*position:absolute;
-    bottom:0;
-    width:50%;*/
     background-color:rgba(0, 0, 0, 0.8);
 }
 
@@ -30,15 +27,15 @@ footer {
     color:rgb(0, 162, 255);
 }
 
-#ac_searchBar {
-    display: inline;
 
-}
 
 /*/////////////////////////////////////////////*/
 /* Admin Styles */
 /*/////////////////////////////////////////////*/
 
+#adminHeader {
+    margin: 15px;
+}
 * {box-sizing: border-box;}
 
 /* Button used to open the contact form - fixed at the bottom of the page */
@@ -131,6 +128,11 @@ td {
     width: 60%;
 }
 
+.tableData {
+    margin-bottom: 10px;
+    margin-left: 40px;
+}
+
 /* Button styles*/
 .tableBtn {
     padding: 20px;
@@ -203,10 +205,12 @@ li {
     display: none;
 }
 
-.dropdown {
-    position: relative;
+.selectpicker {
+    margin-top: 5px;
+    margin-bottom: 25px;
+    margin-left: 15px;
 }
 
-.dropdown select {
-
+#reportsSubmit {
+    margin-left: 10px;
 }

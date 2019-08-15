@@ -65,7 +65,7 @@ module.exports = {
     },
 
     get_isValidUser_SQL: function (inputUserName, inputPass) {
-        var theSql = "SELECT * FROM CST336_Project.Users WHERE userName=?";
+        var theSql = "SELECT * FROM CST336_Project.users WHERE userName=?";
         return theSql;
     },
 

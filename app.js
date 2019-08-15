@@ -168,11 +168,9 @@ app.get("/adminPage", async function (req, res) {
             res.send(results);
         }
 
-
-
     } else {
         results = await ia_tools.sendQuery(sql, [], conn);
-        res.render("adminPage", { "adminName": "ivan", "rows": results });
+        res.render("adminPage", { "adminName": req.session.username, "rows": results });
     }
 
     conn.end();
