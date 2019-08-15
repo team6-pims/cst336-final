@@ -33,7 +33,6 @@ app.get("/", function (req, res) {
 
 app.post("/ac_login", async function (req, resp) {
 
-    
     if (req.session.authenticated == false) {
         var dbConn = ac_tools.createSqlDb_connection();
         var sqlQuery = ac_tools.get_isValidUser_SQL();
@@ -79,7 +78,7 @@ app.post("/ac_login", async function (req, resp) {
         var apodData = await ac_tools.sendAPODapi_request(NASA_apod_url);
 
         resp.render("login_page", {
-            "username": req.body.ac_username,
+            "username": req.session.username,
             "titles": apiData.title,
             "urls": urls,
             "imgUrls": apiData.imgUrl,
@@ -87,7 +86,7 @@ app.post("/ac_login", async function (req, resp) {
             "apodImgUrl": apodData.apodURL,
             "apodTitle": apodData.apodTitle,
             "apodCopyright": apodData.apodCopyright,
-            "isAdmin": isAdmin
+            "isAdmin": req.session.isAdmin
         });
 
     } else {
@@ -99,7 +98,7 @@ app.post("/ac_login", async function (req, resp) {
 
 app.get("/logout", function (req, res) {
     console.log("From inside /logout path: User chose to log out");
-    res.session.destroy();
+    req.session.destroy();
     res.redirect("/");
 });
 
@@ -283,18 +282,14 @@ app.get("/search", isAuthenticated, function(req, res) {
     res.render("search");
 });
 
-app.get("/cart", function(req, res) {
+app.get("/cart", isAuthenticated, function(req, res) {
     var sql = "", sqlParams = [];
     req.session.userID = 1;
     // Get user's cart
     sql = "SELECT itemID, itemName, price, itemQuantity, description1 FROM usercart NATURAL JOIN products WHERE userID = ?;";
     sqlParams = [req.session.userID];
-    console.log("SQL: " + sql);
-    console.log("sqlParams: " + sqlParams);
-    console.log("userID: " + req.session.userID);
     // Execute query
     rs_tools.query(sql, sqlParams).then(function(rows) {
-        console.log("rows: " + rows[1].itemName);
         res.render("cart", {rows: rows});
     });
     
@@ -307,7 +302,7 @@ app.get("/cart", function(req, res) {
  *       : action - list returns all products, if empty then it falls to filters
  *       : searchOptions - filter options (itemName, price, description)
  */
-app.get("/api/querySearch", function (req, res) {
+app.get("/api/querySearch", isAuthenticated, function (req, res) {
     var sql = "", sqlParams = [];
 
     // Check which search parameters were passed and generate
@@ -315,7 +310,7 @@ app.get("/api/querySearch", function (req, res) {
     if (req.query.searchOptions.length > 0) {
         if (req.query.searchOptions.indexOf("itemName") > -1) {
             sql = "SELECT * FROM products WHERE LOWER(itemName) LIKE ?"
-            sqlParams.push('%'+req.query.querySearch+'%');
+            sqlParams.push('%'+req.query.querySearch.toLowerCase()+'%');
         }
         if (req.query.searchOptions.indexOf("price") > -1) {
             if (sql.length > 0)
@@ -326,10 +321,10 @@ app.get("/api/querySearch", function (req, res) {
         }
         if (req.query.searchOptions.indexOf("description") > -1) {
             if (sql.length > 0)
-                sql += " UNION SELECT * FROM products WHERE description2 LIKE ?"
+                sql += " UNION SELECT * FROM products WHERE LOWER(description2) LIKE ?"
             else
-                sql = "SELECT * FROM products WHERE description2 LIKE ?"
-            sqlParams.push('%'+req.query.querySearch+'%');
+                sql = "SELECT * FROM products WHERE LOWER(description2) LIKE ?"
+            sqlParams.push('%'+req.query.querySearch.toLowerCase()+'%');
         }
     }
 
@@ -344,7 +339,7 @@ app.get("/api/querySearch", function (req, res) {
     });
 });
 
-app.get("/api/getCart", function(req, res) {
+app.get("/api/getCart", isAuthenticated, function(req, res) {
     sql = "SELECT itemName, price, itemQuantity, description1 FROM usercart NATURAL JOIN products WHERE userID = ?;";
     sqlParams = [req.query.userID];
 
@@ -358,13 +353,17 @@ app.get("/api/getCart", function(req, res) {
 /** 
  * cartAction
  * Add/update items in user's cart
- * params: action - add, update
+ * params: action - add, update, delete
  *       : itemID, itemQuantity
  */
-app.get("/api/cartAction", function (req, res) {
-    var comboSQL, updateSQL, insertSQL;
-    var comboSQLParams, updateSQLParams, insertSQLParams;
+app.get("/api/cartAction", isAuthenticated, function (req, res) {
+    var comboSQL, updateSQL, insertSQL, deleteSQL;
+    var comboSQLParams, updateSQLParams, insertSQLParams, deleteSQLParams;
 
+    // Foul play checking
+    if (req.query.itemQuantity < 0) {
+        req.query.itemQuantity = 0;
+    }
     // Query returns item quantity for a user and an item
     comboSQL = "SELECT itemQuantity FROM usercart WHERE userID = ? AND itemID = ?"
     comboSQLParams = [req.session.userID, req.query.itemID];
@@ -377,13 +376,17 @@ app.get("/api/cartAction", function (req, res) {
     insertSQL = "INSERT INTO usercart VALUES (?, ?, ?)"
     insertSQLParams = [req.session.userID, req.query.itemID, req.query.itemQuantity];
 
+    // Delete item from cart
+    deleteSQL = "DELETE FROM usercart WHERE userID = ? AND itemID = ?";
+    deleteSQLParams = [req.session.userID, req.query.itemID];
+
     // Check if item exists in cart
     if (req.query.action == "add") {
         rs_tools.query(comboSQL, comboSQLParams).then(function(rows) {
             if (rows.length == 0)
                 // Insert item into user's cart
                 rs_tools.query(insertSQL, insertSQLParams).then(function(rows) {
-                    res.send("Data inserted!");
+                    res.send("Added item to cart!");
                 });
             else { 
                 // Item already exists in cart, so find what new quantity should now be
@@ -391,16 +394,31 @@ app.get("/api/cartAction", function (req, res) {
                 updateSQLParams = [newItemQty, req.session.userID, req.query.itemID];
                 console.log(updateSQLParams);
                 rs_tools.query(updateSQL, updateSQLParams).then(function(rows) {
-                    res.send("Data updated!")
+                    res.send("Updated item in cart!")
                 });
 
             }
         });
     } else if (req.query.action == "update") {
-        rs_tools.query(updateSQL, updateSQLParams).then(function(rows){
-            res.send("Data updated!");
+        rs_tools.query(updateSQL, updateSQLParams).then(function(rows) {
+            res.send("Updated item in cart!");
+        });
+    } else if (req.query.action == "delete") {
+        rs_tools.query(deleteSQL, deleteSQLParams).then(function(rows) {
+            res.send("Removed item from cart!");
         });
     }
+});
+
+// API using SQL to calculate subtotal
+app.get("/api/getCartSubtotal", isAuthenticated, function(req, res) {
+    sql = "SELECT SUM(price * itemQuantity) subTotal FROM products NATURAL JOIN usercart WHERE userID = ?;";
+    sqlParams = [req.session.userID];
+
+    // Execute query
+    rs_tools.query(sql, sqlParams).then(function(rows) {
+        res.send(rows);
+    });
 });
 
 // Middleware function to check authentication
