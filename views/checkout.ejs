@@ -6,13 +6,13 @@
 <% include partials/mc_header.ejs %>
 
 </head>
-
+<br>
 <body>
   <h1>
     Here is a summary of your order:
   </h1>
   
-  <table id="checkoutTable">
+  <table id="checkoutTable" align="center">
     <tr>
       <th>Product Name</th>
       <th>Product Price per Unit</th>
@@ -29,7 +29,7 @@
     
     <% }) %>
   </table><br>
-  Your total cost for the order will be: <%= totalCost %>.<br>
+  Your total cost for the order will be: <%= totalCost %>.<br><br><br>
   
   
   <form action="/checkoutButton">
@@ -37,6 +37,8 @@
       Checkout
     </button>
   </form>
+  <br>
+<br>
   
 </body>
 

@@ -1,9 +1,15 @@
 body {
-    padding-top: 3rem;
+  padding-top: 3rem;
+  background-color: #d3d3d3;
+  text-align: center;
+}
+
+table {
+  align: center;
 }
 
 th, td {
-  padding: 7px;
+  padding: 9px;
   text-align: left;
 }
 
