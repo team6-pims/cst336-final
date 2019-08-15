@@ -22,7 +22,7 @@ app.use(session({
     secret: "top secret!",
     resave: true,
     saveUninitialized: true
-}))
+}));
 
 app.use(express.urlencoded({ extended: true }));
 
