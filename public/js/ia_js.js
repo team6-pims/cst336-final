@@ -210,17 +210,18 @@ $(document).ready(function () {
 });
 
 function redrawTable() {
+    let tableData = $(".tableData");
     $.ajax({
         method: "get",
         url: "/adminPage",
         data: {"action": "redrawTable"},
         success: function (rows) {
-            $(".tableData").empty();
-            $(".tableData").html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
+            tableData.empty();
+            tableData.html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
                 "<th> Product Name </th>\n" + "<th> Price ($) </th>\n" + "<th> Description </th>\n" +
                 "<th> Tags </th>\n");
             rows.forEach(function (row) {
-                $(".tableData").append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
+                tableData.append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
                     "</td>\n<td>" + row.price + "</td>\n<td>" + row.description1 + "</td>\n<td>" + row.description2
                     + "</td></tr>");
             });
@@ -241,29 +242,38 @@ function retrieveReport(query, specifier) {
             let reportsTable = $("#reportsTable");
             reportsTable.empty();
 
-            if (query == 'popular') {
-                $("#reportsTable").html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
+            if (query == 'popular' && rows.length > 0) {
+                reportsTable.html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
                     "<th> Product Name </th>\n" + "<th> Total Units Sold </th>");
                 rows.forEach(function (row) {
-                    $("#reportsTable").append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
+                    reportsTable.append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
                         "</td>\n<td>" + row.total_units + "</td>");
                 });
-            } else if (query == 'price') {
-                $("#reportsTable").html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
+            } else if (query == 'price' && rows.length > 0) {
+                reportsTable.html("<tr class=\"tableHeader\">\n" + "<th> Product ID </th>\n" +
                     "<th> Product Name </th>\n" + "<th> Price ($) </th>");
                 rows.forEach(function (row) {
-                    $("#reportsTable").append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
+                    reportsTable.append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
                         "</td>\n<td>" + row.price + "</td>");
                 });
             } else if (query == 'transaction' && rows.length > 0) {
-                $("#reportsTable").html("<tr class=\"tableHeader\">\n" + "<th> Transaction ID </th>\n" +
-                    "<th> Transaction Total ($) </th>\n<th> User Name </th>\n<th> UserID </th>");
-                rows.forEach(function (row) {
-                    $("#reportsTable").append("<tr class=\"rowData\"><td>" + row.transID + "</td>\n<td>" + row.price_total +
-                        "</td>\n<td>" + row.userName + "</td>\n<td>" + row.userID + "</td>");
-                });
+                if (specifier == 'average') {
+                    reportsTable.html("<tr class=\"tableHeader\">\n" + "<th> User ID </th>\n" +
+                        "<th> Average Transaction Total ($) </th>\n<th> Total Transactions </th>");
+                    rows.forEach(function (row) {
+                        reportsTable.append("<tr class=\"rowData\"><td>" + row.userID + "</td>\n<td>" + row.average_usertotal +
+                            "</td>\n<td>" + row.total_transactions + "</td>");
+                    });
+                } else {
+                    reportsTable.html("<tr class=\"tableHeader\">\n" + "<th> Transaction ID </th>\n" +
+                        "<th> Transaction Total ($) </th>\n<th> User Name </th>\n<th> UserID </th>");
+                    rows.forEach(function (row) {
+                        reportsTable.append("<tr class=\"rowData\"><td>" + row.transID + "</td>\n<td>" + row.price_total +
+                            "</td>\n<td>" + row.userName + "</td>\n<td>" + row.userID + "</td>");
+                    });
+                }
             } else {
-                $("#reportsTable").html("<h2>Empty return from database</h2>")
+                reportsTable.html("<h2>Empty return from database</h2>")
             }
         }
     })

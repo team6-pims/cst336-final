@@ -202,3 +202,11 @@ li {
 #querySpecifier {
     display: none;
 }
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown select {
+
+}

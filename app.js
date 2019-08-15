@@ -155,7 +155,7 @@ app.get("/adminPage", async function (req, res) {
             if (specifier == 'most') {
                 sql += " DESC LIMIT 10";
             } else if (specifier == 'average') {
-                sql = "SELECT itemID, itemName, price FROM products WHERE price = (select max(price) from products)";
+                sql = "SELECT userID, ROUND(AVG(price_total), 0) as 'average_usertotal', COUNT(*) as 'total_transactions' FROM generaltransactions GROUP BY userID";
             } else if (specifier == 'least') {
                 sql += " ASC LIMIT 10";
             }

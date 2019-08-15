@@ -87,16 +87,18 @@
                 </table>
             </div>
             <div id="reportsPage" style="display: none">
-                <select id="query">
-                    <option value=""> Select a query </option>
-                    <option value="popular"> Popularity </option>
-                    <option value="price"> Price of Items </option>
-                    <option value="transaction"> Transaction Amount </option>
-                </select>
-                <select id="querySpecifier">
+                <div class="custom-select">
+                    <select id="query">
+                        <option value=""> Select a query </option>
+                        <option value="popular"> Popularity </option>
+                        <option value="price"> Price of Items </option>
+                        <option value="transaction"> Transaction Amount </option>
+                    </select>
+                    <select id="querySpecifier" >
 
-                </select>
-                <button id="reportsSubmit"> Search </button>
+                    </select>
+                    <button id="reportsSubmit"> Search </button>
+                </div>
                 <table id="reportsTable" class="tableData">
 
                 </table>
