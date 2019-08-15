@@ -22,14 +22,15 @@
     <% rows.forEach(function(row) { %>
     <tr>
       <th><%= row['itemName'] %></th>
-      <th><%= row['price'] %></th>
+      <th><%= row['price'].toLocaleString('en-US', {style: 'currency', currency: 'USD' }).split('.')[0] %></th>
       <th><%= row['itemquantity'] %></th>
     </tr>
     
     
     <% }) %>
   </table><br>
-  Your total cost for the order will be: <%= totalCost %>.<br><br><br>
+  Your total cost for the order will be:
+  <%= totalCost.toLocaleString('en-US', {style: 'currency', currency: 'USD'}).split('.')[0] %>.<br><br><br>
   
   
   <form action="/checkoutButton">

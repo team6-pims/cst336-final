@@ -109,7 +109,7 @@ app.get("/logout", function (req, res) {
 //------------------------------------
 //    BEGIN Ivan Admin Page Route
 //------------------------------------
-app.get("/adminPage", async function (req, res) {
+app.get("/adminPage", isAuthenticated, async function (req, res) {
     var conn = ia_tools.createSqlDb_connection();
     var sql = "SELECT * FROM products";
     var results;
@@ -124,7 +124,7 @@ app.get("/adminPage", async function (req, res) {
     conn.end();
 });
 
-app.get("/api/adminPage", async function (req, res) {
+app.get("/api/adminPage", isAuthenticated, async function (req, res) {
     var conn = ia_tools.createSqlDb_connection();
     var sql = "SELECT * FROM products";
     var results;
@@ -190,7 +190,7 @@ app.get("/api/adminPage", async function (req, res) {
     conn.end();
 });
 
-app.post("/adminPage", async function (req, res) {
+app.post("/adminPage", isAuthenticated, async function (req, res) {
     let itemID = req.body.itemID;
     let itemName = req.body.itemName;
     let price = req.body.price;

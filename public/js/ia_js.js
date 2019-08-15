@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    window.onload = $("td.numberFormat").each(function () {
+        $(this).html(parseInt($(this).text()).toLocaleString('en-US'))
+    });
+
     /* Navbar listeners */
     $("#database").on("click", function () {
         $("#reports").attr("class", "");
@@ -222,8 +226,11 @@ function redrawTable() {
                 "<th> Tags </th>\n");
             rows.forEach(function (row) {
                 tableData.append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
-                    "</td>\n<td>" + row.price + "</td>\n<td>" + row.description1 + "</td>\n<td>" + row.description2
+                    "</td>\n<td class=\"numberFormat\">" + row.price + "</td>\n<td>" + row.description1 + "</td>\n<td>" + row.description2
                     + "</td></tr>");
+            });
+            $("td.numberFormat").each(function () {
+                $(this).html(parseInt($(this).text()).toLocaleString('en-US'))
             });
         }
     })
@@ -254,27 +261,30 @@ function retrieveReport(query, specifier) {
                     "<th> Product Name </th>\n" + "<th> Price ($) </th>");
                 rows.forEach(function (row) {
                     reportsTable.append("<tr class=\"rowData\"><td>" + row.itemID + "</td>\n<td>" + row.itemName +
-                        "</td>\n<td>" + row.price + "</td>");
+                        "</td>\n<td class=\"numberFormat\">" + row.price + "</td>");
                 });
             } else if (query == 'transaction' && rows.length > 0) {
                 if (specifier == 'average') {
                     reportsTable.html("<tr class=\"tableHeader\">\n" + "<th> User ID </th>\n" +
                         "<th> Average Transaction Total ($) </th>\n<th> Total Transactions </th>");
                     rows.forEach(function (row) {
-                        reportsTable.append("<tr class=\"rowData\"><td>" + row.userID + "</td>\n<td>" + row.average_usertotal +
+                        reportsTable.append("<tr class=\"rowData\"><td>" + row.userID + "</td>\n<td class=\"numberFormat\">" + row.average_usertotal +
                             "</td>\n<td>" + row.total_transactions + "</td>");
                     });
                 } else {
                     reportsTable.html("<tr class=\"tableHeader\">\n" + "<th> Transaction ID </th>\n" +
                         "<th> Transaction Total ($) </th>\n<th> User Name </th>\n<th> UserID </th>");
                     rows.forEach(function (row) {
-                        reportsTable.append("<tr class=\"rowData\"><td>" + row.transID + "</td>\n<td>" + row.price_total +
+                        reportsTable.append("<tr class=\"rowData\"><td>" + row.transID + "</td>\n<td class=\"numberFormat\">" + row.price_total +
                             "</td>\n<td>" + row.userName + "</td>\n<td>" + row.userID + "</td>");
                     });
                 }
             } else {
                 reportsTable.html("<h2>Empty return from database</h2>")
             }
+            $("td.numberFormat").each(function () {
+                $(this).html(parseInt($(this).text()).toLocaleString('en-US'))
+            });
         }
     })
 }
