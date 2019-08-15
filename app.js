@@ -49,7 +49,7 @@ app.post("/ac_login", async function (req, resp) {
             console.log("Is the user the admin = " + isAdmin);
 
             /* Randy - Get user id */
-            sql = "SELECT userID FROM Users WHERE userName = ?";
+            sql = "SELECT userID FROM users WHERE userName = ?";
             sqlParams = [req.session.username];
             
             rs_tools.query(sql, sqlParams).then(function(rows) {
