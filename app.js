@@ -49,7 +49,7 @@ app.post("/ac_login", async function (req, resp) {
             console.log("Is the user the admin = " + isAdmin);
 
             /* Randy - Get user id */
-            sql = "SELECT userID FROM users WHERE userName = ?"
+            sql = "SELECT userID FROM Users WHERE userName = ?";
             sqlParams = [req.session.username];
             
             rs_tools.query(sql, sqlParams).then(function(rows) {
@@ -113,7 +113,7 @@ app.get("/logout", function (req, res) {
 
 app.get("/adminPage", async function (req, res) {
     var conn = ia_tools.createSqlDb_connection();
-    var sql = "SELECT * FROM Products";
+    var sql = "SELECT * FROM products";
     var results;
 
     conn.connect(function (err) {
@@ -121,12 +121,12 @@ app.get("/adminPage", async function (req, res) {
     });
 
     if (req.query.action == "requestItem") {
-        var sqlPull = "SELECT * FROM Products WHERE itemID=?";
+        var sqlPull = "SELECT * FROM products WHERE itemID=?";
         var sqlParams = [req.query.itemID];
         results = await ia_tools.sendQuery(sqlPull, sqlParams, conn);
         res.send(results);
     } else if (req.query.action == "redrawTable") {
-        var sql = "SELECT * FROM Products";
+        var sql = "SELECT * FROM products";
         results = await ia_tools.sendQuery(sql, [], conn);
         res.send(results);
     } else if (req.query.action == "report") {
@@ -135,7 +135,7 @@ app.get("/adminPage", async function (req, res) {
         let sql, param; // need?
 
         if (queryType == 'popular') {
-            sql = "SELECT Products.itemID, itemName, SUM(quantity) as 'total_units' FROM Products INNER JOIN DetailedTransactions ON Products.itemID = DetailedTransactions.itemID GROUP BY itemID ORDER BY SUM(quantity)";
+            sql = "SELECT products.itemID, itemName, SUM(itemquantity) as 'total_units' FROM products INNER JOIN detailedtransactions ON products.itemID = detailedtransactions.itemID GROUP BY itemID ORDER BY SUM(itemquantity)";
             if (specifier == 'most') {
                 sql += " DESC";
 
@@ -144,20 +144,20 @@ app.get("/adminPage", async function (req, res) {
             }
 
         } else if (queryType == 'price') {
-            sql = "SELECT itemID, itemName, price FROM Products WHERE price = (select";
+            sql = "SELECT itemID, itemName, price FROM products WHERE price = (select";
             if (specifier == 'high') {
-                sql += " max(price) from Products)";
+                sql += " max(price) from products)";
             } else if (specifier == 'low') {
-                sql += " min(price) from Products)";
+                sql += " min(price) from products)";
             }
         } else if (queryType == 'transaction') {
-            sql = "SELECT transID, price_total, userName, Users.userID FROM Users INNER JOIN GeneralTransactions ON Users.userID = GeneralTransactions.userID ORDER BY price_total";
+            sql = "SELECT transID, price_total, userName, users.userID FROM users INNER JOIN generaltransactions ON users.userID = generaltransactions.userID ORDER BY price_total";
             if (specifier == 'most') {
                 sql += " DESC LIMIT 10";
             } else if (specifier == 'average') {
-                sql = "SELECT itemID, itemName, price FROM Product WHERE price = (select max(price) from Products)";
+                sql = "SELECT itemID, itemName, price FROM products WHERE price = (select max(price) from products)";
             } else if (specifier == 'least') {
-                sql += " DESC LIMIT 10";
+                sql += " ASC LIMIT 10";
             }
         }
         var error;
@@ -194,20 +194,20 @@ app.post("/adminPage", async function (req, res) {
     });
 
     if (type == "add") {
-        var sqlAdd = "INSERT INTO Products VALUES (default, ?, ?, ?, ?)";
+        var sqlAdd = "INSERT INTO products VALUES (default, ?, ?, ?, ?)";
         var sqlParamsAdd = [itemName, price, description, tags];
         await ia_tools.postQuery(sqlAdd, sqlParamsAdd, conn);
     } else if (type == "update") {
-        var sqlUpdate = "UPDATE Products SET itemName=?, price=?, description1=?, description2=? WHERE itemID=?";
+        var sqlUpdate = "UPDATE products SET itemName=?, price=?, description1=?, description2=? WHERE itemID=?";
         var sqlParamsUpdate = [itemName, price, description, tags, itemID];
         await ia_tools.postQuery(sqlUpdate, sqlParamsUpdate, conn);
     } else if (type == "delete") {
-        var sqlDelete = "DELETE FROM Products WHERE itemID=?";
+        var sqlDelete = "DELETE FROM products WHERE itemID=?";
         var sqlParamsDelete = [itemID];
         await ia_tools.postQuery(sqlDelete, sqlParamsDelete, conn);
     }
 
-    var sql = "SELECT * FROM Products";
+    var sql = "SELECT * FROM products";
     var results = await ia_tools.sendQuery(sql, [], conn);
     res.render("adminPage", { "adminName": "ivan", "rows": results });
 
@@ -227,8 +227,8 @@ app.get("/checkoutPreview", isAuthenticated, async function (req, res) {
   let userid = req.session.userID;
   let totalCost = "";
   var conn = ia_tools.createSqlDb_connection();
-  var sql = "SELECT Products.itemName, Products.price, UserCart.itemquantity FROM `UserCart` INNER JOIN `Products` ON UserCart.itemID = Products.itemID WHERE userID =" + userid;
-  var calcTotal = "SELECT SUM(Products.Price * UserCart.itemquantity) AS totalCost FROM Products JOIN UserCart ON Products.itemID = UserCart.itemID WHERE userID =" + userid;
+  var sql = "SELECT products.itemName, products.price, usercart.itemquantity FROM `usercart` INNER JOIN `products` ON usercart.itemID = products.itemID WHERE userID =" + userid;
+  var calcTotal = "SELECT SUM(products.Price * usercart.itemquantity) AS totalCost FROM products JOIN usercart ON products.itemID = usercart.itemID WHERE userID =" + userid;
 
   conn.connect(function (err) {
       if (err) throw err;
@@ -250,9 +250,9 @@ app.get("/checkoutButton", isAuthenticated, async function (req, res) {
   let transid = "";
   let totalCost = "";
   var conn = ia_tools.createSqlDb_connection();
-  var calcTotal = "SELECT SUM(Products.Price * UserCart.itemquantity) AS totalCost FROM Products JOIN UserCart ON Products.itemID = UserCart.itemID WHERE userID =" + userid;
-  var submitTrans = "INSERT INTO `GeneralTransactions` (userID, trans_ts, price_total) VALUES (" + userid + ", CURRENT_TIMESTAMP, " + totalCost +")";
-  var submitOrder = "INSERT INTO `DetailedTransactions` (transID, itemID, itemquantity) SELECT '"+ transid +"', itemID, itemquantity FROM UserCart WHERE userID =" + userid +"; DELETE FROM UserCart WHERE userID ="+ userid;
+  var calcTotal = "SELECT SUM(products.Price * usercart.itemquantity) AS totalCost FROM products JOIN usercart ON products.itemID = usercart.itemID WHERE userID =" + userid;
+  var submitTrans = "INSERT INTO `generaltransactions` (userID, trans_ts, price_total) VALUES (" + userid + ", CURRENT_TIMESTAMP, " + totalCost +")";
+  var submitOrder = "INSERT INTO `detailedtransactions` (transID, itemID, itemquantity) SELECT '"+ transid +"', itemID, itemquantity FROM usercart WHERE userID =" + userid +"; DELETE FROM usercart WHERE userID ="+ userid;
   
   conn.connect(function (err) {
       if (err) throw err;

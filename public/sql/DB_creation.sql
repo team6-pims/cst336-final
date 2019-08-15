@@ -6,14 +6,14 @@ create database CST336_Project;
 use CST336_Project;
 
 -- create the tables
-CREATE TABLE Users (
+CREATE TABLE users (
     userID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     userName VARCHAR(45),
     password VARCHAR(72),
     adminPriv BOOLEAN
 );
 
-CREATE TABLE Products (
+CREATE TABLE products (
     itemID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     itemName VARCHAR(45),
     price BIGINT,
@@ -21,20 +21,20 @@ CREATE TABLE Products (
     description2 VARCHAR(250)
 );
 
-CREATE TABLE GeneralTransactions (
+CREATE TABLE generaltransactions (
     transID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     userID INT REFERENCES Users (userID),
     trans_ts DATETIME NOT NULL,
     price_total BIGINT(25) NOT NULL
 );
 
-CREATE TABLE DetailedTransactions (
+CREATE TABLE detailedtransactions (
     transID INT REFERENCES GeneralTransactions (transID),
     itemID INT REFERENCES Products (itemID),
     itemquantity INT REFERENCES UserCart (itemquantity)
 );
 
-CREATE TABLE UserCart
+CREATE TABLE usercart
 (
     userID       INT(11) NOT NULL,
     itemID       INT(11) NOT NULL,
@@ -42,12 +42,12 @@ CREATE TABLE UserCart
 );
 -- populate the tables
 -- users
-insert into Users values
+insert into users values
 (default, 'admin', '$2b$04$Wappq2OLsTdMcZEUmUjrFeXQCbfgQITrb/vMDG2R02oR3joYer0su', True),
 (default, 'buyer', '$2b$04$9eDgKZebf2bMQaz1BVBSSuVmFFYGS4TAArmJ9viDOsTGUhj3BGq92', False);
 
 -- products
-INSERT INTO Products VALUES
+INSERT INTO products VALUES
 -- Stars
 (default, 'Hyper-giants', 10000000000, 'The largest of the largest stars in existence. They are typically blue, yellow, or red in appearance and are the brightest of all stars. However, they are unstable in the fact that they constantly lose mass via stellar winds. Due to this fact, hypergiants have extremely short stellar lives with the minimum being in the range of a couple thousand years.', 'hyper, giant, star'),
 (default, 'Super-giants', 10000000000, 'The boundary between super and hypergiants is basically nonexistent. Stars in this range are on a continuum with supergiants being on the lower end of this continuum. Much of the  features of a hypergiant are present in supergiants and as such, can be just as unstable. Supergiants are less  luminous and massive than hypergiants as they have lost more of their fuel to stellar winds.', 'super, giant, star'),
@@ -72,14 +72,14 @@ INSERT INTO Products VALUES
 (default, 'Comet', 80000, 'The key difference between an asteroid and a comet is the presence of water-ice and other frozen compounds that sublimate when it gets close to a heat source. A beautiful addition to any system.', 'comet');
 -- last two tables left blank for now
 
-INSERT INTO UserCart VALUES
+INSERT INTO usercart VALUES
 (2,5,12),
 (2,1,1),
 (2,2,15),
 (2,3,14),
 (2,4,2);
 
-INSERT INTO DetailedTransactions VALUES
+INSERT INTO detailedtransactions VALUES
 (1,10,2),
 (1,1,1),
 (1,14,3),
@@ -89,9 +89,10 @@ INSERT INTO DetailedTransactions VALUES
 (3,16,8),
 (4,16,10);
 
-INSERT INTO GeneralTransactions VALUES
-(1,2,CURRENT_TIMESTAMP, 24000000000),
-(2,2,CURRENT_TIMESTAMP, 35500000000),
-(3,2,CURRENT_TIMESTAMP, 6400000000),
-(4,2,CURRENT_TIMESTAMP, 8000000000)
+INSERT INTO generaltransactions VALUES
+(default,2,CURRENT_TIMESTAMP, 24000000000),
+(default,2,CURRENT_TIMESTAMP, 42000000000),
+(default,2,CURRENT_TIMESTAMP, 35500000000),
+(default,2,CURRENT_TIMESTAMP, 6400000000),
+(default,2,CURRENT_TIMESTAMP, 8000000000)
 
