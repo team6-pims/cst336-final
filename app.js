@@ -449,15 +449,15 @@ function isAuthenticated(req, res, next) {
 //------------------------------------
 
 // codeanywhere uses 0.0.0.0
-app.listen("8081", "0.0.0.0", function () {
-    console.log("Express server is running...")
-});
+// app.listen("8081", "0.0.0.0", function () {
+//     console.log("Express server is running...")
+// });
 
 
 // local machine uses 127.0.0.1
-// app.listen("8081", "127.0.0.1", function () {
-//     console.log("Express server is running...")
-// });
+app.listen("8081", "127.0.0.1", function () {
+    console.log("Express server is running...")
+});
 
 // Heroku Environ
 /*app.listen(process.env.PORT, process.env.IP, function () {
