@@ -249,6 +249,13 @@ app.get("/checkoutPreview", isAuthenticated, async function (req, res) {
   totalCost = result[0].totalCost;
   
   var results = await ia_tools.sendQuery(sql, [userid], conn);
+  
+  console.log(results);
+  if (typeof results == undefined){
+    results['itemName'] = "";
+    results['price'] = "";
+    results['itemquantity'] = "";
+  }
     
   res.render("checkout", {"rows": results, "totalCost":totalCost});
   conn.end();
