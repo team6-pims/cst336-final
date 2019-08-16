@@ -187,7 +187,7 @@ app.get("/api/adminPage", isAuthenticated, async function (req, res) {
         res.render("adminPage", { "adminName": req.session.username, "rows": results });
     }
 
-    conn.end();
+    //conn.end();
 });
 
 app.post("/adminPage", isAuthenticated, async function (req, res) {
@@ -223,7 +223,7 @@ app.post("/adminPage", isAuthenticated, async function (req, res) {
     res.render("adminPage", { "adminName": "ivan", "rows": results });
 
     // close connection - not a pool connection
-    conn.end();
+    //conn.end();
 });
 //------------------------------------
 //    END Ivan Admin Page Route
